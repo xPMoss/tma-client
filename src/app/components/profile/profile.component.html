@@ -1,0 +1,26 @@
+
+
+
+
+<div class="container-fluid my-4 p-4">
+    <!--
+    <div class="row mb-4">
+        <div class="col-auto">
+            <h4>Profile</h4>
+        </div>
+
+    </div>
+    -->
+
+    <div class="row" *ngIf="us.user">
+        
+        <div class="col-12">
+            Name: {{us.user.name}}
+        </div>
+        <div class="col-12">
+            Email: {{us.user.email}}
+        </div>
+
+    </div>
+
+</div>

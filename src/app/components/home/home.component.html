@@ -1,0 +1,170 @@
+
+
+<!-- 
+<div class="container-fluid my-4 p-4" *ngIf="loaded==false">
+    <div class="row my-4">
+
+        <div class="col-12">
+            <p><ngb-progressbar type="success" [value]="loading" [striped]="true" ></ngb-progressbar></p>
+
+        </div>
+
+
+    </div>
+</div>
+-->
+
+<div class="container-fluid">
+
+    <!-- | POPULAR | -->    
+    <div class="row mb-4" *ngIf="!ms.popularMovies">
+        <div class="col-w100 p-4 m-4"></div>
+        <h6 class="col-auto mx-auto align-middle"> LOADING MOVIES ({{ms.popularMovies.length}})</h6>
+
+    </div>
+    <div class="row mb-4" *ngIf="ms.popularMovies">
+        <h4 class="col-12">Popular movies</h4> 
+
+        <div class="d-none d-sm-none d-md-none d-lg-none d-xl-none"></div>
+
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 m-auto">
+            <ngb-carousel >
+                <ng-template ngbSlide *ngFor="let movie of ms.popularMovies | slice:0:5; ">
+                    
+                    <div class="picsum-img-wrapper">
+                        <!--
+                        <div class="row p-0 m-0 bg-white border rounded" style="z-index: 1000;" *ngIf="movie.loading">
+                            <div class="col p-0 m-0">
+                                <img class="img-fluid rounded p-0 m-0" style="opacity: 0;" src="https://via.placeholder.com/1280x720?text=_"/>
+                            </div>
+
+                            <div class="col position-absolute p-0 m-0">
+                                <div class="row p-0 m-0">
+                                    <div class="col-w100 py-4"></div>
+                                    <div class="col-w100 py-4"></div>
+                                    <div class="col-w100 py-4"></div>
+                                    <div class="col-w100 p-0">
+                                        <div class="bg-primary py-4 mx-auto rounded" style="width: 60%;"></div>
+                                    </div>
+                                    <div class="col-w100 py-2"></div>
+                                    <div class="row p-0 m-0">
+                                        <div class="py-2" style="width: 20%;"></div>
+                                        <div class="bg-primary py-2 rounded" style="width: 11%;"></div>
+                                        <div class="py-2" style="width: 2%;"></div>
+                                        <div class="bg-primary py-2 rounded" style="width: 11%;"></div>
+                                        <div class="py-2" style="width: 2%;"></div>
+                                        <div class="bg-primary py-2 rounded" style="width: 11%;"></div>
+                                        <div class="py-2" style="width: 2%;"></div>
+                                        <div class="bg-primary py-2 rounded" style="width: 11%;"></div>
+                                        <div class="py-2" style="width: 20%;"></div>
+                                    </div>
+                                </div>   
+                            </div>
+                            
+                        </div>
+                        -->
+
+                        <!---->
+                        <!--
+                        <div class="row m-0 p-0" *ngIf="movie.poster_loading">
+                            <div class="rounded bg-secondary col-12 btn ratio ratio-16x9" *ngIf="movie.poster_loading">
+                                <div class="col-12" style="top:45%; padding-left: 46%; padding-right: 46%;">
+                                    <div class="mb-2">Loading...</div> 
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span> 
+                                    </div>
+                                </div>
+    
+                            </div> 
+                        </div>
+                        -->
+                        <img class="btn img-fluid rounded p-0 m-0" src="https://via.placeholder.com/1280x720?text=LOADING" *ngIf="movie.backdrop_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
+                        <img class="btn img-fluid rounded p-0 m-0" [src]="movie.base_url + 'original' + movie.backdrop_path" *ngIf="!movie.backdrop_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
+    
+                    </div>
+            
+                    <div class="carousel-caption" *ngIf="!movie.backdrop_loading">
+                        <h3>{{movie.title}}</h3>
+                        <p class="d-none d-sm-none d-md-none d-lg-none d-xl-block">{{movie.overview}}</p>
+                    </div>
+                </ng-template>
+            </ngb-carousel> 
+        </div>
+        
+        <div class="d-none d-sm-none d-md-none d-lg-none d-xl-none"></div>
+        
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 m-auto">
+            <div class="col-4 col-sm-3 col-md-3 col-lg-3 btn p-0 m-0" *ngFor="let movie of ms.popularMovies | slice:5:17;" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}">
+                <!--
+                <div class="row" *ngIf="movie.loading">
+                    <div class="col">
+                        <div class="position-absolute m-auto spinner-border text-primary" role="status" >
+                            <span class="visually-hidden">Loading...</span>
+                            
+                        </div>
+                        <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING"/>
+                    </div>
+                    
+                </div>
+                -->  
+                <!--<div class="col-12 rounded m-0 bg-light border ratio" style="--bs-aspect-ratio: 120%;" *ngIf="movie.poster_loading"></div>--> 
+                <div *ngIf="movie.loading">  
+                    <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
+                    
+                </div>
+                <div *ngIf="!movie.loading">
+                    <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
+                    <img class="img-fluid rounded p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path" *ngIf="!movie.poster_loading"/>
+                </div>
+                
+    
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- | TRENDING | -->
+    <div class="row mb-4" *ngIf="!ms.trendingMovies">
+        <div class="col-w100 p-4 m-4"></div>
+        <h6 class="col-auto mx-auto align-middle"> LOADING MOVIES ({{ms.trendingMovies.length}})</h6>
+
+    </div>
+    <div class="row mb-4" *ngIf="ms.trendingMovies">
+        <h4 class="col-12">Trending movies</h4>
+        
+        <div class="col-6 col-sm-3 btn p-0 m-0" *ngFor="let movie of ms.trendingMovies | slice:0:4;" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}">
+
+            <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
+            <img class="img-fluid rounded p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path" *ngIf="!movie.poster_loading"/>
+
+        </div>
+    </div>
+
+    <!-- | TOP RATED | -->
+    <div class="row mb-4" *ngIf="!ms.topRatedMovies">
+        <div class="col-w100 p-4 m-4"></div>
+        <h6 class="col-auto mx-auto align-middle"> LOADING MOVIES ({{ms.topRatedMovies.length}})</h6>
+
+    </div>
+    <div class="row mb-4" *ngIf="ms.topRatedMovies">
+        <h4 class="col-12">Top rated movies</h4>
+        
+
+        <div class="col-4 col-sm-3 col-md-2 col-lg-2 btn p-0 m-0" *ngFor="let movie of ms.topRatedMovies | slice:0:20;" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}">
+            <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
+            <img class="img-fluid rounded p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path" *ngIf="!movie.poster_loading"/>
+        </div>
+    </div>
+    
+
+    
+    
+
+    
+
+</div>
+
+   
+    
+    
+

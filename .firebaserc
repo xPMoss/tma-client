@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "the-movie-app-344909"
+  },
+  "targets": {
+    "the-movie-app-344909": {
+      "hosting": {
+        "tma-angular": [
+          "the-movie-app-344909"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,184 @@
+
+
+
+
+
+<!-- Sidebar navigation -->
+<!-- Navbar -->
+<!--
+<div class="container-fluid mb-4 mt-4" style="z-index: 400; position: fixed;" id="sidenav" >
+  <div class="row mt-4">
+    <div class="col-auto py-0 my-1"></div>
+    
+  </div>
+  <div class="row d-none d-md-flex p-0 m-0" *ngIf="!isInline">
+    <nav class="col-auto p-0 m-0 mb-4 border-end" id="sidenavlist" style="height: 100vh;">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list-group-item-action px-4 active" style="cursor: auto; user-select: none;" id="profile" (click)="nav('profile')">
+          <i class="fas fa-user"></i> User Profile
+        </li>
+        <li class="list-group-item list-group-item-action px-4 " style="cursor: pointer; user-select: none;" id="settings" (click)="nav('settings')">
+          <i class="fas fa-gear"></i> Settings
+        </li>
+        <li class="list-group-item list-group-item-action px-4 " style="cursor: pointer; user-select: none;" id="signout" (click)="promptSignOut()">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign out
+        </li>
+      </ul>
+    </nav>
+    
+
+  </div>
+
+</div>
+-->
+
+
+<div class="container-fluid mb-4">
+
+
+  <div class="row">
+    
+    <!-- Navbar -->
+    <div class="col-md-auto d-flex d-md-block p-0 m-0 mb-4 text-center ">
+      
+      <div class=" col bg-primary text-white py-2 px-4 border" style="cursor: pointer; user-select: none;" id="profile" (click)="nav('profile')">
+        <i class="fas fa-user">&nbsp;</i>
+        <div class="d-none d-sm-inline">&nbsp;User Profile</div>
+      </div>
+
+      <div class="col py-2 px-4 border" style="cursor: pointer; user-select: none;" id="settings" (click)="nav('settings')">
+        <i class="fas fa-gear">&nbsp;</i>
+        <div class="d-none d-sm-inline">&nbsp;Settings</div>
+      </div>
+
+      <!-- EMPTY -->
+      <div class="col d-none d-md-block py-2 px-4 border">
+        &nbsp;
+        <div class="d-none d-sm-inline">&nbsp;</div>
+      </div>
+
+      <div class="col py-2 px-4 border" style="cursor: pointer; user-select: none;" (click)="promptSignOut()">
+        <i class="fa-solid fa-right-from-bracket">&nbsp;</i> 
+        <div class="d-none d-sm-inline">&nbsp;Sign out</div>
+      </div>
+      
+    </div>
+
+    <!-- Main content -->
+
+    <!-- USER PROFILE -->
+    <main role="main" class="col px-4 mx-auto" *ngIf="page=='profile'">
+      <div class="inner-adjust">
+        
+        <div class="row">
+          <div class="col pb-2 mb-3 border-bottom">
+            <h4 class="">User Profile</h4>
+          </div>
+        </div>
+        
+
+        <!-- Show user data when logged in -->
+        <div class="row" *ngIf="authService.userData as user">
+          <div class="col">
+            
+            <img class="img img-fluid rounded-circle mb-2" src="{{user.photoURL}}" alt="{{user.displayName}}" *ngIf="user.photoURL">
+
+            <div class="h1 mb-2" *ngIf="!user.photoURL">
+              <i class="fa-solid fa-user"></i>
+            </div>
+
+            <h4 *ngIf="user.displayName">Hello {{user.displayName}}</h4>
+            <p>ID: <strong>{{user.uid}}</strong></p>
+            <p>Email: <strong>{{user.email}}</strong></p>
+            <p>Email Verified: <strong>{{user.emailVerified}}</strong></p>
+
+          </div>
+        </div>
+
+
+
+      </div>
+    </main>
+
+    <!-- SETTINGS -->
+    <main role="main" class="col px-4 mx-auto" *ngIf="page=='settings'">
+      <div class="inner-adjust">
+        
+        <div class="row">
+          <div class="col pb-2 mb-3 border-bottom">
+            <h4 class="">Settings</h4>
+          </div>
+        </div>
+        
+        
+
+        <!-- Show user data when logged in -->
+        <div class="row" *ngIf="authService.user?.loaded">
+          <div class="col-12">
+
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" aria-label="Text input with dropdown button">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Dropdown</button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Separated link</a></li>
+              </ul>
+            </div>
+
+            Show as: {{authService.user?.prefs.showAs}}
+          </div>
+          <div class="col-12">
+
+            <div class="form-check form-switch">
+              
+              <label class="form-check-label" for="flexSwitchCheckDefault">Show as: {{authService.user?.prefs.showAs}}</label>
+
+              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked>
+            </div>
+            
+          </div>
+
+        
+          
+        </div>
+
+
+
+      </div>
+    </main>
+
+
+
+  </div>
+</div>
+
+
+<!-- | MODAL / POPUP | -->
+<div class="position-fixed col-10 col-sm-8 col-md-6 col-lg-4 translate-middle start-50 top-50 bg-white p-4 border rounded" *ngIf="promptVisible" style="z-index:1200;">
+  <div class="row px-2">
+    <div class="col-12 pb-4 mb-4 border-bottom">
+      <h4 class="">Sign out?</h4>
+    </div>
+  </div>
+    
+
+  <!-- Show user data when logged in -->
+  <div class="row px-4 justify-content-end">
+   
+    <div class="col-auto btn btn-danger me-2" (click)="signOut('y')">
+      Yes
+    </div>
+    <div class="col-auto btn btn-outline-primary"(click)="signOut('n')" >
+      No
+    </div>
+  </div>
+    
+
+</div>
+
+<div class="position-fixed translate-middle start-50 top-50" *ngIf="promptVisible" style="z-index:1000; width: 100vw; height: 100vh; background:rgba(0,0,0,0.6);"></div>
+  
+  

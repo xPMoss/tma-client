@@ -1,0 +1,9 @@
+
+
+
+<div [ngStyle]="{height:'height',width:'width'}" *ngIf="isLoading">
+    <img src=loader/>
+    <button class="col-12 btn btn-primary">HEJ</button>
+</div>
+            
+<img class="img-fluid rounded p-0 m-0" [src]=image [ngStyle]="{visibility:isLoading?'hidden':''}" (load)="hideLoader()" (error)="hideLoader()" />

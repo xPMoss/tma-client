@@ -1,0 +1,58 @@
+
+
+<nav class="fixed-top navbar navbar-expand-md navbar-light bg-light border-bottom p-0 m-0 px-4" style="z-index: 500; width: 100vw;">
+    
+    <a class="navbar-brand" routerLink="/" (click)="isMenuCollapsed = true">Home</a>
+
+    <search-field-component class="d-block d-sm-block d-md-none d-lg-none"></search-field-component>
+
+    <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" [ngbCollapse]="isMenuCollapsed">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link active" routerLink="/movies" (click)="isMenuCollapsed = true" *ngIf="authService.isLoggedIn">Movies</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/lists" (click)="isMenuCollapsed = true" *ngIf="authService.isLoggedIn">Lists</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/discover" (click)="isMenuCollapsed = true">Discover</a>
+            </li>
+            
+
+
+
+        </ul>
+    </div>
+
+    <search-field-component class="d-none d-sm-none d-md-block"></search-field-component>
+
+    <div class="collapse navbar-collapse justify-content-end " [ngbCollapse]="isMenuCollapsed">
+        <ul class="navbar-nav mr-auto">
+
+            <!--
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/profile" (click)="isMenuCollapsed = true" *ngIf="authService.isLoggedIn">Profile</a>
+                
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/settings" (click)="isMenuCollapsed = true" *ngIf="authService.isLoggedIn">Settings</a>
+            </li>
+            -->
+
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/dashboard" (click)="isMenuCollapsed = true" *ngIf="authService.isLoggedIn">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/sign-in" (click)="isMenuCollapsed = true" *ngIf="!authService.isLoggedIn"><i class="fa-solid fa-right-to-bracket"></i> Sign in</a>
+            </li>
+
+        </ul>
+    </div>
+
+</nav>
+

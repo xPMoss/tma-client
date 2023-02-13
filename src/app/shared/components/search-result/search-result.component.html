@@ -1,0 +1,41 @@
+
+
+
+
+
+
+
+<div class="col-12 start-0 position-absolute  mx-auto px-4" style="z-index: 400;" >
+   <div class="col-12 border-bottom border-start border-end bg-light m-0 px-3 py-2" *ngIf="ss.movies">
+      <h4>Search results</h4>
+   </div>
+   <div class="col-12 btn border-bottom border-start border-end bg-light" *ngFor="let movie of ss.movies" routerLink="/movie/{{movie.id}}" (click)="ms.cMovie = movie; ss.movies = []; clear();">
+      <div class="row">
+         <div class="col-4 col-sm-2">
+
+            <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
+            <img class="img-fluid rounded p-0 m-0" src="{{movie.base_url + 'w200' + movie.poster_path}}" *ngIf="!movie.poster_loading"/>
+   
+         </div>
+         
+         <div class="col-8 col-sm-10 text-start">
+            <div class="row text-truncate">
+               <div class="col-12 ">
+                  <b>{{movie.title}}</b>
+               </div>
+               
+            </div>
+            <div class="row ">
+               <div class="col-12">
+                 {{movie.overview}}
+               </div>
+               
+            </div>
+            
+         </div>
+      </div>
+      
+
+   </div>
+   
+</div>

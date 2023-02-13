@@ -1,0 +1,37 @@
+
+
+
+
+<div class="container-fluid p-4">
+    <!--
+    <div class="row mb-4">
+        <h4 class="col-auto">
+            Search
+        </h4>
+    </div>
+    -->
+
+    <div class="row mb-4">
+        
+      
+        <div class="col-3 mb-4 p-0 m-0" *ngFor="let movie of movies" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}">
+            <div class="text-truncate">
+                <small class="">{{ movie.title }}</small>
+            </div>
+            
+            <img class="img-fluid btn p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path"/>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+<div class="row mb-4">
+    <div class="col-auto mx-auto">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
