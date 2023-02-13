@@ -40,9 +40,11 @@ auth_config.json
 
 # Firebase
 .firebase
+.firebaserc
 *-debug.log
 .runtimeconfig.json
 firebase.json
+proxy.conf.json
 
 # Angular
 .angular
