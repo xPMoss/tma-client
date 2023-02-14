@@ -67,11 +67,18 @@ export class MovieService {
 
   user:any;
 
+  timer = { 
+    start:Date.now(),
+    stop:null,
+    time:null
+  }
+
   constructor( private authService:AuthService, private db:AngularFireDatabase, private tmdb:TmdbService, private http:HttpClient, public afAuth: AngularFireAuth ) {
     console.log("MovieService()")
    
     console.log(authService.user)
  
+    
     // ----->>
     let movieList = moviedb;
 
@@ -150,6 +157,11 @@ export class MovieService {
       this.popularMovies = data;
       this.popularMoviesLoading = false;
 
+      let time = 0;
+      for (const iterator of data) {
+        time += iterator.ticker.time;
+      }
+
     })
 
     // Load trending movies
@@ -175,9 +187,16 @@ export class MovieService {
       
 
     });
+
+
     
     //google-oauth2|116709753550013423577
     //this.copyData("movies", "2", "UP8kcJmzpNMY4NuR6SbLi6mAtPu2")
+
+    // Timer
+    this.timer.stop = Date.now();
+    this.timer.time = (this.timer.stop-this.timer.start) / 1000;
+    console.log(this.timer)
 
   }
 

@@ -454,6 +454,13 @@ export class TmdbService {
 
     }
 
+
+    timer = { 
+        start:Date.now(),
+        stop:null,
+        time:null
+    }
+    
     // RETURNS LIST OF MOVIES //
     /* Hämtar en lista av populära filmer */
     async getPopularTmdb(page) {
@@ -476,6 +483,12 @@ export class TmdbService {
 
         //console.log("loadPopularMoviesTmdb url" + url); // DEBUGGING
         //console.log(movies); // DEBUGGING
+
+        // Timer
+        this.timer.stop = Date.now();
+        this.timer.time = (this.timer.stop-this.timer.start) / 1000;
+        console.log(this.timer)
+
         return result; 
         
     }

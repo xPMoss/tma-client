@@ -784,8 +784,15 @@ export class Movie{
 
     }
 
+    ticker = { 
+        start:Date.now(),
+        stop:null,
+        time:null
+    }
+
     // Load and init tmdb data
     async init?(){
+
         let providers = await this.tmdb.getWatchProvidersTMDB(this.id).then( (data)=> {
             // Merge objects
             
@@ -837,8 +844,6 @@ export class Movie{
 
         }
         
-        
-        
         //let base = "https://via.placeholder.com/";
         //let image = "200x300";
         //https://via.placeholder.com/800x600?text=TEXT_ON_IMAGE
@@ -848,16 +853,21 @@ export class Movie{
         // Debug
         //this.loading = true;
         
-        this.posters_loading = false;
-        this.poster_loading = false;
-        this.backdrop_loading = false;
-        this.backdrops_loading = false;
+        this.posters_loading = true;
+        this.poster_loading = true;
+        this.backdrop_loading = true;
+        this.backdrops_loading = true;
         
 
         if(!this.loading){
             this.timer.stop()
 
         }
+
+        // Timer
+        this.ticker.stop = Date.now();
+        this.ticker.time = (this.ticker.stop-this.ticker.start) / 1000;
+        ///console.log(this.ticker)
         
         return true;
 
