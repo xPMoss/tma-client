@@ -131,6 +131,8 @@ export class AuthService {
 
   // Sign in with Google
   GoogleAuth() {
+    console.log(this.constructor.name + ".GoogleAuth()")
+
     return this.AuthLogin(new auth.GoogleAuthProvider()).then((res: any) => {
       this.router.navigate(['dashboard']);
     });
@@ -139,6 +141,8 @@ export class AuthService {
 
   // Auth logic to run auth providers
   AuthLogin(provider:any) {
+    console.log(this.constructor.name + ".AuthLogin()")
+    
     return this.afAuth
       .signInWithPopup(provider)
       .then((result) => {
@@ -193,6 +197,7 @@ export class AuthService {
   GetUser(user:any){
 
     let userObj = this.db.list( 'users', ref => ref.orderByChild('uid').equalTo( user.uid ) );
+
     userObj.valueChanges().subscribe( (data) => {
 
       let foundUser:boolean = false;
@@ -209,16 +214,25 @@ export class AuthService {
         }
       })
 
-
       if (!foundUser) {
         this.createUserDB();
 
       }
 
-
     })
 
+    let movieObj = this.db.list( 'movies' + user.uid );
+
+    movieObj.valueChanges().subscribe( (data) => {
+      console.log(data)
+     
+      
+
+    })
+    
+
   }
+
 
   async createUserDB(){
 
@@ -226,15 +240,6 @@ export class AuthService {
 
     // SAVE  
     let saveObject = {
-      inventory:"",
-      factories:"",
-      shop:"",
-      upgrades:"",
-      achievements:"",
-      electricity:"",
-      time:"",
-      settings:"",
-
     }
     this.db.list('users').set(uid, this.user);
     

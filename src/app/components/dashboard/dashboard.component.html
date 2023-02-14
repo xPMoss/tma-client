@@ -128,10 +128,12 @@
               </ul>
             </div>
 
-            Show as: {{authService.user?.prefs.showAs}}
+            
           </div>
-          <div class="col-12">
 
+          
+          <div class="col-12" *ngIf="authService.user?.prefs">
+            Show as: {{authService.user?.prefs.showAs}}
             <div class="form-check form-switch">
               
               <label class="form-check-label" for="flexSwitchCheckDefault">Show as: {{authService.user?.prefs.showAs}}</label>

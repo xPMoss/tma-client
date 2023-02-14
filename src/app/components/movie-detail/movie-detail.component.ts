@@ -1,6 +1,7 @@
 // Angular
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
+import { Router} from '@angular/router';
 
 // rxjs
 import { Observable, throwError, map } from 'rxjs';
@@ -70,6 +71,7 @@ export class MovieDetailComponent {
         public tmdb:TmdbService, 
         public ds:DiscoverService,
         public auth:AuthService,
+        public router:Router,
         ){
        
     }
@@ -394,6 +396,11 @@ export class MovieDetailComponent {
     
     }
 
+    close(){
+
+        this.router.navigate([''])
+
+    }
 
 
     /*

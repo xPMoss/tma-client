@@ -20,6 +20,7 @@ import { Movie, Country, ReleaseDate, Certification, Genre, Keyword } from "../.
 import { List } from "../../shared/models/list.model";
 import { Filter } from "../../shared/models/filter.model";
 
+import { genres as genresdb } from 'src/assets/db';
 
 @Component({
   selector: 'discover-component',
@@ -31,23 +32,32 @@ export class DiscoverComponent {
 
   isLoggedIn:boolean = false;
 
+  public genresdb = genresdb;
+
   constructor(
     public tmdb:TmdbService, 
     public ms:MovieService, 
     public location: Location, 
     public ds:DiscoverService,
     public auth:AuthService,
+    
     ){
     
   }
 
   ngOnInit() {
     this.isLoggedIn = this.auth.isLoggedIn;
+    this.ds.setMovies();
 
+   
   }
 
 
+  ngOnDestroy(){
+    console.log(this.constructor.name + ".ngOnDestroy()")
+    this.ds.reset();
 
+  }
 
 
 

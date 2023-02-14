@@ -111,3 +111,26 @@ export const movies = [
     { id:437311, title:"Órbita 9", seen:false, vote:0, saved:true, lists:['Saved'] },
 
 ]
+
+export const genres = [
+    { "id": 28, "name": "Action", active:false },
+    { "id": 12, "name": "Äventyr", active:false },
+    { "id": 16, "name": "Animerat", active:false },
+    { "id": 35, "name": "Komedi", active:false },
+    { "id": 80, "name": "Kriminal", active:false },
+    { "id": 99, "name": "Dokumentär", active:false },
+    { "id": 18, "name": "Drama", active:false },
+    { "id": 10751, "name": "Familj", active:false },
+    {"id": 14,"name": "Fantasy", active:false },
+    { "id": 36,"name": "Historisk", active:false },
+    { "id": 27, "name": "Skräck", active:false },
+    { "id": 10402, "name": "Music", active:false },
+    { "id": 9648, "name": "Mystik", active:false },
+    { "id": 10749, "name": "Romantik", active:false },
+    { "id": 878, "name": "Science Fiction", active:false },
+    { "id": 10770, "name": "TV-film", active:false },
+    { "id": 53, "name": "Thriller", active:false },
+    { "id": 10752, "name": "Krig", active:false },
+    { "id": 37, "name": "Västern", active:false }
+
+]

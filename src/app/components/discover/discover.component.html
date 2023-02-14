@@ -1,17 +1,79 @@
 
 
-
-<div class="container-fluid" *ngIf="ms.cMovie as movie">
+<div class="container-fluid mb-4 px-4">
     <div class="row">
-        <div class="col-4 col-sm-2 m-0 p-0 pe-2 pb-2" *ngFor="let g of ds.cGenres">
-            {{g.name}}
+        <div class="col-auto p-0 m-0 mb-2" >By genre:&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-auto p-0 m-0" *ngFor="let g of ds.tmdbGenres">
+            <button class="p-0 px-2 py-1 btn btn-outline-dark btn-sm me-2 mb-2" *ngIf="!g.active" (click)="ds.reset(); ds.cGenres[0] = g; ds.setMovies();">{{g.name}} </button>
+            <button class="p-0 px-2 py-1 btn btn-dark btn-sm me-2 mb-2" *ngIf="g.active">{{g.name}} </button>
         </div>
 
     </div>
 </div>
 
+<div class="container-fluid mb-4 px-4" *ngIf="ds.cMovies.length > 0">
+    <div class="row">
+        <div class="col-auto p-0 m-0 mb-2" >Sort:&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col-auto p-0 m-0">
+            <button class="p-0 px-2 py-1 btn btn-outline-dark btn-sm me-2 mb-2" (click)="ds.sortArrayBy(ds.cMovies, 'title', '')">Title</button>
+        </div>
+        <div class="col-auto p-0 m-0">
+            <button class="p-0 px-2 py-1 btn btn-outline-dark btn-sm me-2 mb-2" (click)="ds.sortArrayBy(ds.cMovies, 'runtime', '')">Runtime</button>
+        </div>
+        <div class="col-auto p-0 m-0">
+            <button class="p-0 px-2 py-1 btn btn-outline-dark btn-sm me-2 mb-2" (click)="ds.sortArrayBy(ds.cMovies, 'budget', '')">budget</button>
+        </div>
+        <div class="col-auto p-0 m-0">
+            <button class="p-0 px-2 py-1 btn btn-outline-dark btn-sm me-2 mb-2" (click)="ds.sortArrayBy(ds.cMovies, 'vote_average', '')">vote_average</button>
+        </div>
+        <div class="col-auto p-0 m-0">
+            <button class="p-0 px-2 py-1 btn btn-outline-dark btn-sm me-2 mb-2" (click)="ds.sortArrayBy(ds.cMovies, 'vote_count', '')">vote_count</button>
+        </div>
 
-<div class="container-fluid pb-4 mb-4" >
+    </div>
+
+</div>
+
+<!-- 
+    release_date?:Date;
+
+    runtime?:number;
+
+    buddget?:number;
+    revenue?:number;
+
+    vote_average?:number;
+    vote_count?:number;
+
+    popularity.asc, popularity.desc, release_date.asc, release_date.desc, revenue.asc, revenue.desc, primary_release_date.asc, primary_release_date.desc, original_title.asc, original_title.desc, vote_average.asc, vote_average.desc, vote_count.asc, vote_count.desc
+    default: popularity.desc - optional
+-->
+
+<div class="container-fluid" *ngIf="ds.cMovies.length > 0">
+    <div class="row" >
+        <div class="col-6 col-md-4 m-0 p-0 mb-4 px-2" *ngFor="let movie of ds.cMovies">
+            <div class="col-12 mb-2 text-truncate">
+                {{ movie.title }}
+            </div>
+            <!-- Image -->
+            <div class="col-12">
+                <img class="img-fluid rounded" src="https://via.placeholder.com/400x600?text=LOADING" *ngIf="movie.poster_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
+                <img class="img-fluid rounded" src="{{movie.base_url + 'w400' + movie.poster_path}}" *ngIf="movie.poster_path && !movie.poster_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
+            </div>
+            
+        </div>
+    
+    </div>
+    
+</div>
+
+
+<!-- Loading -->
+<div class="container-fluid pb-4 mb-4" *ngIf="ds.cMovies.length < 1 && ds.loadMovies">
     <div class="row pb-4 mb-4">
         <div class="col-w100 pb-4 mb-4"></div>
         <h6 class="col-auto mx-auto align-middle">Loading...</h6>

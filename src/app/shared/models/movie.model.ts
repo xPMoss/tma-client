@@ -702,7 +702,7 @@ export class Movie{
     release_dates?:Country[];
     runtime?:number;
 
-    buddget?:number;
+    budget?:number;
     revenue?:number;
 
     status?:"Released"|"Unreleased";
@@ -807,6 +807,7 @@ export class Movie{
         this.genres = data.genres;
         this.runtime = data.runtime;
         this.length = this.timeConvert(this.runtime)
+        this.budget = data.budget
 
         this.tagline = data.tagline;
         this.vote_count = data.vote_count;

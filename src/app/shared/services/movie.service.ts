@@ -8,7 +8,7 @@ import { catchError, retry } from 'rxjs/operators';
 
 // firebase
 import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angular/fire/compat/database';
-
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 
 // Models
@@ -65,7 +65,9 @@ export class MovieService {
 
   debug:boolean = false;
 
-  constructor( private authService:AuthService, private db:AngularFireDatabase, private tmdb:TmdbService, private http:HttpClient ) {
+  user:any;
+
+  constructor( private authService:AuthService, private db:AngularFireDatabase, private tmdb:TmdbService, private http:HttpClient, public afAuth: AngularFireAuth ) {
     console.log("MovieService()")
    
     console.log(authService.user)
@@ -138,15 +140,7 @@ export class MovieService {
         
       }
 
-      for (let i = 0; i < 20; i++) {
-        let data = {
-
-        }
-        let movie = new Movie(data);
-        this.aMovies.push(movie)
-        this.cMovies.push(movie)
-        
-      }
+     
     }
 
     preload();
@@ -171,6 +165,23 @@ export class MovieService {
       
     })
 
+    this.afAuth.authState.subscribe( (user) => {
+      this.user = user;
+      console.log(user)
+      if (user){
+        this.loadUserMovies();
+        
+      } 
+      
+
+    });
+    
+    //google-oauth2|116709753550013423577
+    //this.copyData("movies", "2", "UP8kcJmzpNMY4NuR6SbLi6mAtPu2")
+
+  }
+
+  loadUserMovies(){
     // Load lists
     this.lists = this.db.list('lists', ref => ref.orderByChild('title'));
     this.lists.valueChanges().subscribe( (ls) => {
@@ -189,7 +200,8 @@ export class MovieService {
     })
 
     // Load movies
-    this.movies = this.db.list('movies', ref => ref.orderByChild('title'));
+    this.movies = this.db.list('movies_' + this.authService.user.uid, ref => ref.orderByChild('title'));
+
     this.movies.valueChanges().subscribe( async (ms:Movie[]) => {
       // ms = movies
       // m = movie
@@ -235,11 +247,10 @@ export class MovieService {
       
     })
 
-    //google-oauth2|116709753550013423577
-    //this.copyData("movies", "2", "UP8kcJmzpNMY4NuR6SbLi6mAtPu2")
+    
+
 
   }
-
 
   async copyData(type:any, fromID:any, uid:string){
 
@@ -366,7 +377,7 @@ export class MovieService {
     //let data = this.db.list( 'projects', ref => ref.orderByChild('name').equalTo( name ) ).valueChanges();
  
     let obj = new Promise<any>((resolve)=> {
-      this.db.list( 'movies', ref => ref.orderByChild('name').equalTo( name ) ).valueChanges().subscribe( data => resolve(data) )
+      this.db.list( 'movies_' + this.user.uid, ref => ref.orderByChild('name').equalTo( name ) ).valueChanges().subscribe( data => resolve(data) )
     })
 
     return obj;
@@ -376,13 +387,13 @@ export class MovieService {
   getItemById(id):AngularFireList<Movie>{
     //console.log("id: " + id)
 
-    return this.db.list( 'movies', ref => ref.orderByChild('id').equalTo( id ) );
+    return this.db.list( 'movies_' + this.user.uid, ref => ref.orderByChild('id').equalTo( id ) );
   }
 
   // GET/:name //
   findItem(name){
     let obj = new Promise<any>((resolve)=> {
-      this.db.list( 'movies', ref => ref.orderByChild('name').equalTo( name ) ).valueChanges().subscribe( data => resolve(data) )
+      this.db.list( 'movies_' + this.user.uid, ref => ref.orderByChild('name').equalTo( name ) ).valueChanges().subscribe( data => resolve(data) )
 
     })
 
@@ -410,7 +421,7 @@ export class MovieService {
     console.log(typeof item.vote);
 
 
-    await this.db.list('movies').update(item.id.toString(), item)
+    await this.db.list('movies_' + this.user.uid).update(item.id.toString(), item)
     
   }
 
@@ -440,7 +451,7 @@ export class MovieService {
   ////////////
   // DELETE //
   async deleteItem(item){
-    this.db.list('movies').remove(item.id.toString());
+    this.db.list('movies_' + this.user.uid).remove(item.id.toString());
 
 
   }
