@@ -29,6 +29,12 @@ export class HomeComponent {
 
   ngOnInit() {
 
+    this.ms.loadHomeMovies();
+
+
+
+
+    
   }
 
 

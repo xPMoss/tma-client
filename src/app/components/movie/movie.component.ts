@@ -48,7 +48,10 @@ export class MovieComponent {
     }
 
     ngOnInit(){
-      
+      if (this.ms.cMovies.length < 1) {
+        this.ms.loadUserMovies();
+        
+      }
       
 
     }

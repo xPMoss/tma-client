@@ -25,6 +25,8 @@ import { AuthService } from './auth.service';
 @Injectable({ providedIn: 'root' })
 export class MovieService {
 
+  page:string;
+
   // Firebase objects
   lists:AngularFireList<List>;
   movies:AngularFireList<Movie>;
@@ -73,11 +75,15 @@ export class MovieService {
     time:null
   }
 
-  constructor( private authService:AuthService, private db:AngularFireDatabase, private tmdb:TmdbService, private http:HttpClient, public afAuth: AngularFireAuth ) {
+  constructor( 
+    private authService:AuthService, 
+    private db:AngularFireDatabase, 
+    private tmdb:TmdbService, 
+    private http:HttpClient, 
+    public afAuth: AngularFireAuth 
+    ) {
     console.log("MovieService()")
-   
     console.log(authService.user)
- 
     
     // ----->>
     let movieList = moviedb;
@@ -90,34 +96,7 @@ export class MovieService {
     }
     // <<-----
 
-    /*
-    this.tmdb.getPopularTmdb().subscribe( async (data) => {
-      //console.log(data)
 
-      let result = data.results;
-
-      for await (const movie of result) {
-        let m = new Movie(movie);
-        let show = await m.checkRating()
-
-        if ( show ) {
-          this.popularMovies.push(m)
-          //await m.init();
-        }
-
-        // IF NOT LOADED PROPERLY
-        if (m.loading) {
-          //await m.init();
-        }
-
-        // FALLBACK
-        //movie.loading = false;
-
-        
-      }
-
-    })
-    */
 
     let preload = ()=>{
       for (let i = 0; i < 20; i++) {
@@ -152,6 +131,53 @@ export class MovieService {
 
     preload();
 
+    let user = JSON.parse(localStorage.getItem('user')!);
+    this.user = user;
+    
+    this.afAuth.authState.subscribe( (user) => {
+      this.user = user;
+
+    });
+
+
+    
+    //google-oauth2|116709753550013423577
+    //this.copyData("lists", "2", "UP8kcJmzpNMY4NuR6SbLi6mAtPu2")
+
+     // Timer
+     this.timer.stop = Date.now();
+     this.timer.time = (this.timer.stop-this.timer.start) / 1000;
+     console.log(this.timer)
+
+  }
+
+  async copyData(type:any, fromID:any, uid:string){
+
+    // Fetch
+    let items = await new Promise<any>((resolve)=> {
+      try{
+        this.db.list(type).valueChanges().subscribe( data => resolve(data) )
+       } 
+       catch(e){
+        console.log(e)
+
+       }
+      
+    })
+
+    console.log(items)
+
+    // Set
+    for (const data of items) {
+      this.db.list(type + "_" + uid).update(data.title.toString(), data);
+    }
+
+
+    
+
+  }
+
+  loadHomeMovies(){
     // Load popular movies
     this.loadMoviesTmdb("popular").then( async(data)=>{
       this.popularMovies = data;
@@ -177,32 +203,13 @@ export class MovieService {
       
     })
 
-    this.afAuth.authState.subscribe( (user) => {
-      this.user = user;
-      console.log(user)
-      if (user){
-        this.loadUserMovies();
-        
-      } 
-      
 
-    });
-
-
-    
-    //google-oauth2|116709753550013423577
-    //this.copyData("movies", "2", "UP8kcJmzpNMY4NuR6SbLi6mAtPu2")
-
-    // Timer
-    this.timer.stop = Date.now();
-    this.timer.time = (this.timer.stop-this.timer.start) / 1000;
-    console.log(this.timer)
 
   }
 
   loadUserMovies(){
     // Load lists
-    this.lists = this.db.list('lists', ref => ref.orderByChild('title'));
+    this.lists = this.db.list('lists_' + this.user.uid, ref => ref.orderByChild('title'));
     this.lists.valueChanges().subscribe( (ls) => {
 
       ls.forEach(async (l) => {
@@ -219,7 +226,7 @@ export class MovieService {
     })
 
     // Load movies
-    this.movies = this.db.list('movies_' + this.authService.user.uid, ref => ref.orderByChild('title'));
+    this.movies = this.db.list('movies_' + this.user.uid, ref => ref.orderByChild('title'));
 
     this.movies.valueChanges().subscribe( async (ms:Movie[]) => {
       // ms = movies
@@ -227,8 +234,45 @@ export class MovieService {
       this.aMovies = []
       if(this.debug)console.log(ms.length) // DEBUGGING
       
+      for (const m of ms) {
+        // nm = new movie
+        let nm = new Movie(m);
+        this.aMovies.push(nm)
+        
+        // m = movie
+        for(const l of this.aLists) {
+          // l = list
+          if (m.lists.includes(l.title)) {
+            l.movies.push(nm)
+          }   
+
+        };
+
+      };
+
+      this.cMovies = this.aMovies;
+      this.moviesLoading = false;
+
+      // Load info
+      for (const m of this.aMovies) {
+        await m.preload();
+
+      };
+
+      // Load images and misc
+      for (const m of this.aMovies) {
+        // nm = new movie
+        let show = await m.checkRating()
+        
+        if ( show ) {
+          await m.init();
+
+        }
+        
+      };
 
       //->
+      /*
       for await (const m of ms) {
         // nm = new movie
         let nm = new Movie(m);
@@ -253,12 +297,11 @@ export class MovieService {
         
 
       };
+      */
       //<-
 
-      // Set all movies
-      this.cMovies = this.aMovies;
-      this.moviesLoading = false
-
+      
+     
       if(this.debug)console.log("<ALL LISTS>") // DEBUGGING
       if(this.debug)console.log(this.aLists) // DEBUGGING
       if(this.debug)console.log("<ALL MOVIES>") // DEBUGGING
@@ -271,31 +314,7 @@ export class MovieService {
 
   }
 
-  async copyData(type:any, fromID:any, uid:string){
 
-    // Fetch
-    let items = await new Promise<any>((resolve)=> {
-      try{
-        this.db.list(type).valueChanges().subscribe( data => resolve(data) )
-       } 
-       catch(e){
-        console.log(e)
-
-       }
-      
-    })
-
-    console.log(items)
-
-    // Set
-    for (const data of items) {
-      this.db.list(type + "_" + uid).update(data.id.toString(), data);
-    }
-
-
-    
-
-  }
 
   async loadMoviesTmdb(type):Promise<Movie[]>{
     
@@ -321,13 +340,25 @@ export class MovieService {
         data = null
       }
 
-      for await (const d of data) {
-        let m = new Movie(d);
-        let show = await m.checkRating()
+
+      for (const m of data) {
+        // nm = new movie
+        let nm = new Movie(m);
+        movies.push(nm)
+        
+
+      };
+
+      for (const m of movies) {
+        await m.preload();
+
+      }
+
+      for await (const d of movies) {
+        let show = await d.checkRating()
   
         if ( show ) {
-          await m.init();
-          movies.push(m)
+          await d.init();
           
         }
   
@@ -405,6 +436,7 @@ export class MovieService {
   // GET/:name //
   getItemById(id):AngularFireList<Movie>{
     //console.log("id: " + id)
+    console.log(this.user)
 
     return this.db.list( 'movies_' + this.user.uid, ref => ref.orderByChild('id').equalTo( id ) );
   }

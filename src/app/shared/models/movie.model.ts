@@ -748,19 +748,14 @@ export class Movie{
 
     
     timer:Timer;
-    
+    ticker = { 
+        start:Date.now(),
+        stop:null,
+        time:null
+    }
 
     constructor(data){
         //console.log("Movie.constructor()")
-        
-        if(data.title == "Medieval"){
-            
-        }
-
-        this.timer = new Timer();
-        
-
-        this.tmdb = new TmdbService(this.http);
 
         // LOADING
         this.preloading = true;
@@ -769,7 +764,14 @@ export class Movie{
         this.backdrop_loading = true;
         this.posters_loading = true;
         this.backdrops_loading = true;
+
         
+        if(data.title == "Medieval"){
+            
+        }
+
+        this.timer = new Timer();
+        this.tmdb = new TmdbService(this.http);
 
         this.id = data.id;
         this.saved = data.saved;
@@ -777,31 +779,20 @@ export class Movie{
         this.title = data.title;
         this.lists = data.lists;
         this.vote = data.vote;
-
-        this.preloading = false;
-
         
+    }
+
+    setData?(data){
+        this.id = data.id;
+        this.saved = data.saved;
+        this.seen = data.seen;
+        this.title = data.title;
+        this.lists = data.lists;
+        this.vote = data.vote;
 
     }
 
-    ticker = { 
-        start:Date.now(),
-        stop:null,
-        time:null
-    }
-
-    // Load and init tmdb data
-    async init?(){
-
-        let providers = await this.tmdb.getWatchProvidersTMDB(this.id).then( (data)=> {
-            // Merge objects
-            
-            let providers = data
-            const obj = { ...this, ...providers };
-            return obj;
-        });
-        this.flatrate = providers.flatrate;
-
+    async preload?(){
         let data = await this.tmdb.getDetailsTmdb(this.id);
         this.poster_path = data.poster_path;
         this.poster_loading = false;
@@ -814,6 +805,7 @@ export class Movie{
         this.genres = data.genres;
         this.runtime = data.runtime;
         this.length = this.timeConvert(this.runtime)
+
         this.budget = data.budget
 
         this.tagline = data.tagline;
@@ -825,7 +817,11 @@ export class Movie{
         let keywords = await this.tmdb.getKeywordsTmdb(this.id);
         this.keywords = keywords.keywords;
 
+        this.preloading = false;
+    }
 
+    // Load and init tmdb data
+    async init?(){
         let images = await this.tmdb.getImagesTmdb(this.id);
         //console.log(images)
 
@@ -843,6 +839,15 @@ export class Movie{
             }
 
         }
+
+        let providers = await this.tmdb.getWatchProvidersTMDB(this.id).then( (data)=> {
+            // Merge objects
+            
+            let providers = data
+            const obj = { ...this, ...providers };
+            return obj;
+        });
+        this.flatrate = providers.flatrate;
         
         //let base = "https://via.placeholder.com/";
         //let image = "200x300";
@@ -854,9 +859,6 @@ export class Movie{
         //this.loading = true;
         
         this.posters_loading = false;
-        this.poster_loading = false;
-        this.backdrop_loading = false;
-        this.backdrops_loading = false;
         
 
         if(!this.loading){

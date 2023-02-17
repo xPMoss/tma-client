@@ -37,6 +37,11 @@ export class ListComponent {
   }
 
   ngOnInit() {
+    if (this.ms.cMovies.length < 1) {
+      this.ms.loadUserMovies();
+      
+    }
+    
     this.cLists = this.lists;
 
     this.listForm = this.fb.group({

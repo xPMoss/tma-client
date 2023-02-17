@@ -22,7 +22,7 @@ import { movies as moviedb } from 'src/assets/db';
 
 @Injectable({ providedIn: 'root' })
 export class DiscoverService {
-
+  
   lists:AngularFireList<List>;
   list:List;
 
@@ -122,13 +122,19 @@ export class DiscoverService {
 
       data = await this.tmdb.movieDiscoverTmdb(params);
 
-      for await (const d of data) {
+      for (const d of data) {
         let m = new Movie(d);
+        m.preload();
+        movies.push(m)
+      }
+
+      for (const m of movies) {
+
         let show = await m.checkRating()
   
         if ( show ) {
           await m.init();
-          movies.push(m)
+          
           
         }
   

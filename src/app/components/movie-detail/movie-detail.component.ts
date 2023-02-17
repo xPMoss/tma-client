@@ -78,7 +78,17 @@ export class MovieDetailComponent {
     
     ngOnInit(){
         console.log("MovieDetailComponent.ngOnInit()")
-       
+        
+        if (this.ms.cMovies.length < 1) {
+            this.ms.loadUserMovies();
+            
+        }
+
+        if (this.ms.page) {
+            localStorage.setItem('page', this.ms.page);
+        }
+        
+
         //const cat = localStorage.getItem('myCat');
         //localStorage.setItem('myCat', 'Tom');
         //localStorage.removeItem('myCat');
@@ -86,45 +96,49 @@ export class MovieDetailComponent {
 
         this.isLoggedIn = this.auth.isLoggedIn;
 
-        // If no cMovie
-        if (!this.ms.cMovie) {
-            console.log("No cMovie!!!")
+        let check = async ()=>{
+            // If no cMovie
+            if (!this.ms.cMovie) {
+                console.log("No cMovie!!!")
 
-            let cMovie = localStorage.getItem('cMovie');
-            this.loadMovie(Number(cMovie));
-
-            this.getSimilarMovies(Number(cMovie));
-        }
-        else{
-            //this.checkIfSaved()
-
-            this.ms.getItemById(this.ms.cMovie.id).valueChanges().subscribe( async data=>{
-                console.log("data")
-                console.log(data)
-
-                if (data.length > 0) {
-                    this.ms.cMovie = new Movie(data[0])
-                    this.ms.cMovie.init()
+                let cMovie = {
+                    id:null
                 }
-                else{
-                    let newMovie = new Movie(this.ms.cMovie)
-                    this.ms.cMovie = newMovie;
-                    this.ms.cMovie.saved = false;
-                    await this.ms.cMovie.init()
+                cMovie.id = localStorage.getItem('cMovie');
+                console.log(cMovie)
+                let movie = await new Movie(cMovie);
+                await movie.preload();
+                await movie.init();
+                this.ms.cMovie = movie;
 
-                }
-            })
+                await this.loadMovie(Number(this.ms.cMovie.id));
+                await this.getSimilarMovies(this.ms.cMovie.id);
+                await this.loadLists();
 
-            localStorage.removeItem('cMovie');
-            localStorage.setItem('cMovie', this.ms.cMovie.id.toString());
+                
+            }
+            else{
+                console.log("cMovie is present")
+                //this.checkIfSaved()
 
-            this.getSimilarMovies( this.ms.cMovie.id );
+                await this.loadMovie(this.ms.cMovie.id);
+                await this.getSimilarMovies(this.ms.cMovie.id);
+                await this.loadLists();
+                
+                localStorage.setItem('cMovie', this.ms.cMovie.id.toString());
+
+            }
 
         }
 
-        this.loadLists();
+        check();
 
-        console.log(this.ms.cMovie)
+        
+
+      
+        
+
+        
         
     }
 
@@ -143,8 +157,13 @@ export class MovieDetailComponent {
 
             similar.forEach( sm => {
                 this.similarMovies.push( new Movie(sm) );
+                
 
             });
+
+            for (const movie of this.similarMovies) {
+                movie.preload();
+            }
 
             for (let i = 0; i < this.similarMovies.length; i++) {
                 let sm = this.similarMovies[i]
@@ -161,35 +180,16 @@ export class MovieDetailComponent {
 
             console.log(data)
 
-            let m;
-
             if (data.length > 0) {
-                m = new Movie(data[0]);
+                this.ms.cMovie.setData(data[0])
+
             }
             else{
-                let tmdbData = await this.tmdb.getDetailsTmdb(Number(id));
-                m = new Movie(tmdbData);
-                m.saved = false;
-
+                this.ms.cMovie.saved = false;
+                this.ms.cMovie.lists = [];
             }
 
-            let show = await m.checkRating()
-
-            console.log("show")
-            console.log(show)
-
-            if ( show ) {
-                //console.log(show +" "+ m.title)
-                await m.init();
-
-                this.ms.cMovie = m;
-                console.log("this.ms.cMovie")
-                console.log(this.ms.cMovie)
-            }
-            
-            
             //let cookies = document.cookie;
-
             console.log(id)
             console.log("this.ms.cMovie")
             console.log(this.ms.cMovie)
@@ -398,7 +398,22 @@ export class MovieDetailComponent {
 
     close(){
 
-        this.router.navigate([''])
+        if (!this.ms.page) {
+            let page = localStorage.getItem("page");
+            this.ms.page = page.toLocaleLowerCase();
+            
+        }
+        
+        this.router.navigate([this.ms.page.toLocaleLowerCase()])
+        
+
+    }
+
+    similar(movie){
+        this.ms.cMovie = movie;
+        this.router.navigate(['movie/' + movie.id])
+        this.ngOnInit();
+
 
     }
 

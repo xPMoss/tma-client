@@ -23,6 +23,7 @@ import { AuthGuard } from './shared/guard/auth.guard';
 
 const routes: Routes = [
   { path:"", component: HomeComponent, data: { title: "Home" } },
+  { path:"home", component: HomeComponent, data: { title: "Home" } },
   { path:"movies", component: MovieComponent, data: { title: "Movies" }, canActivate: [AuthGuard] },
   { path:"movie/:id", component: MovieDetailComponent, data: { title: "Movie details" }},
   { path:"lists", component: ListComponent, data: { title: "Lists" }, canActivate: [AuthGuard] },

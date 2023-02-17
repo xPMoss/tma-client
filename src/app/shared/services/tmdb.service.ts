@@ -25,6 +25,13 @@ export class TmdbService {
     api_key:string;
     language:string;
 
+    // DEBUGGING
+    timer = { 
+        start:Date.now(),
+        stop:null,
+        time:null
+    }
+
     constructor(public http:HttpClient) {
         if(this.debug)console.log("TmdbService()") // DEBUGGING
         
@@ -62,6 +69,10 @@ export class TmdbService {
         } 
     
         //console.log(data)
+         // Timer
+         this.timer.stop = Date.now();
+         this.timer.time = (this.timer.stop-this.timer.start) / 1000;
+         //console.log(this.timer)
 
         return data;
     }
@@ -455,11 +466,7 @@ export class TmdbService {
     }
 
 
-    timer = { 
-        start:Date.now(),
-        stop:null,
-        time:null
-    }
+    
     
     // RETURNS LIST OF MOVIES //
     /* Hämtar en lista av populära filmer */
@@ -484,10 +491,7 @@ export class TmdbService {
         //console.log("loadPopularMoviesTmdb url" + url); // DEBUGGING
         //console.log(movies); // DEBUGGING
 
-        // Timer
-        this.timer.stop = Date.now();
-        this.timer.time = (this.timer.stop-this.timer.start) / 1000;
-        console.log(this.timer)
+       
 
         return result; 
         

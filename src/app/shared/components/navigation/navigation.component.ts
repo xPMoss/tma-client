@@ -12,6 +12,7 @@ import { NgbNav } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 
 
+import { MovieService } from "../../services/movie.service";
 
 
 @Component({
@@ -22,8 +23,10 @@ export class NavigationComponent {
   title = 'navigation-component';
 
   public isMenuCollapsed = true;
+
+  public page:string;
   
-  constructor( public authService: AuthService ){
+  constructor( public authService: AuthService, public ms:MovieService ){
     
 
 

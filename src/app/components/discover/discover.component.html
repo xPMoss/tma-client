@@ -60,7 +60,7 @@
                 {{ movie.title }}
             </div>
             <!-- Image -->
-            <div class="col-12">
+            <div class="col-12 btn">
                 <img class="img-fluid rounded" src="https://via.placeholder.com/400x600?text=LOADING" *ngIf="movie.poster_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
                 <img class="img-fluid rounded" src="{{movie.base_url + 'w400' + movie.poster_path}}" *ngIf="movie.poster_path && !movie.poster_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
             </div>
