@@ -126,6 +126,7 @@ export class AuthService {
   get isLoggedIn(): boolean {
     const user = JSON.parse(localStorage.getItem('user')!);
     return user !== null && user.emailVerified !== false ? true : false;
+    
   }
 
 
@@ -134,7 +135,8 @@ export class AuthService {
     console.log(this.constructor.name + ".GoogleAuth()")
 
     return this.AuthLogin(new auth.GoogleAuthProvider()).then((res: any) => {
-      this.router.navigate(['dashboard']);
+      
+      
     });
   }
 

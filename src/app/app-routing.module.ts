@@ -34,7 +34,6 @@ const routes: Routes = [
 
   { path: 'dashboard', component: DashboardComponent, data: { title: "Dashboard" }, canActivate: [AuthGuard] },
 
-
   { path: 'sign-in', component: SignInComponent, data: { title: "Sign in" } },
   { path: 'register-user', component: SignUpComponent, data: { title: "Register" } },
   { path: 'forgot-password', component: ForgotPasswordComponent, data: { title: "Reset password" } },

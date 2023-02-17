@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 
 import { AuthService } from "../../shared/services/auth.service";
+import { Router } from '@angular/router';
 
 
 
@@ -12,9 +13,21 @@ import { AuthService } from "../../shared/services/auth.service";
 })
 export class SignInComponent implements OnInit {
 
-  constructor( public authService: AuthService ) { }
+  constructor( public authService: AuthService, public router: Router, ) { }
 
   ngOnInit(): void {
+
+
+  }
+
+
+
+  async signin(userName, userPassword){
+
+    await this.authService.SignIn(userName.value, userPassword.value)
+
+    this.router.navigate(['dashboard']);
+    
   }
 
 }

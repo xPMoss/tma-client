@@ -853,10 +853,10 @@ export class Movie{
         // Debug
         //this.loading = true;
         
-        this.posters_loading = true;
-        this.poster_loading = true;
-        this.backdrop_loading = true;
-        this.backdrops_loading = true;
+        this.posters_loading = false;
+        this.poster_loading = false;
+        this.backdrop_loading = false;
+        this.backdrops_loading = false;
         
 
         if(!this.loading){
