@@ -70,6 +70,7 @@ import { MovieService } from "./shared/services/movie.service";
 import { SearchService } from "./shared/services/search.service";
 import { UserService } from "./shared/services/user.service";
 import { DiscoverService } from "./shared/services/discover.service";
+import { MsgService } from "./shared/services/msg.service";
 // <-- Services
 
 
@@ -120,7 +121,7 @@ import { DiscoverService } from "./shared/services/discover.service";
     
   ],
   exports: [],
-  providers: [AuthService, UserService, TmdbService, MovieService, SearchService, DiscoverService],
+  providers: [AuthService, UserService, TmdbService, MovieService, SearchService, DiscoverService, MsgService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

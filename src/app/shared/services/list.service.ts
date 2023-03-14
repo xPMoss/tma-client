@@ -7,6 +7,9 @@ import { catchError, retry } from 'rxjs/operators';
 
 // firebase
 import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angular/fire/compat/database';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+
+import { AuthService } from './auth.service';
 
 // Models
 import { Movie } from "../models/movie.model";
@@ -16,6 +19,7 @@ import { List } from "../models/list.model";
 
 @Injectable({ providedIn: 'root' })
 export class ListService {
+  user:any;
 
   lists:AngularFireList<List>;
   list:List;
@@ -28,14 +32,20 @@ export class ListService {
 
   cMovie: Movie;
 
-  constructor( private db:AngularFireDatabase) {
+  constructor( 
+    private db:AngularFireDatabase,
+    private authService:AuthService, 
+    public afAuth: AngularFireAuth 
+    ) {
     console.log("ListService()")
-
-
-
     
+    let user = JSON.parse(localStorage.getItem('user')!);
+    this.user = user;
     
-    this.lists = this.db.list('lists', ref => ref.orderByChild('title'));
+    this.afAuth.authState.subscribe( (user) => {
+      this.user = user;
+
+    });
 
 
 
@@ -52,23 +62,19 @@ export class ListService {
     //let data = this.db.list( 'projects', ref => ref.orderByChild('name').equalTo( name ) ).valueChanges();
  
     let obj = new Promise<any>((resolve)=> {
-      this.db.list( 'movies', ref => ref.orderByChild('name').equalTo( name ) ).valueChanges().subscribe( data => resolve(data) )
+      this.db.list( 'lists_' + this.user.uid, ref => ref.orderByChild('title').equalTo( name ) ).valueChanges().subscribe( data => resolve(data) )
     })
 
     return obj;
   }
 
-  // GET/:name //
-  getItemById(id):AngularFireList<Movie>{
-    console.log("od: " + id)
-
-    return this.db.list( 'movies', ref => ref.orderByChild('id').equalTo( id ) );
-  }
 
   // GET/:name //
   findItem(name){
     let obj = new Promise<any>((resolve)=> {
-      this.db.list( 'movies', ref => ref.orderByChild('name').equalTo( name ) ).valueChanges().subscribe( data => resolve(data) )
+      this.db.list( 'lists_' + this.user.uid, ref => ref.orderByChild('title').equalTo( name ) ).valueChanges().subscribe( 
+        data => resolve(data) 
+        )
 
     })
 
@@ -80,19 +86,8 @@ export class ListService {
   /////////
   // PUT //
   async setItem(item:any) {
-    console.log("setItem")
-    console.log(item.id)
 
-    let movie_user:any;
-    movie_user = { id: item.id, saved:true };
-
-    //movie_user = { id: item.id, seen: item.seen };
-
-    if (item.seen==undefined) {
-      
-    }
-
-    await this.db.list('movies').update(item.id.toString(), item)
+    await this.db.list( 'lists_' + this.user.uid ).update(item.title.toString(), item)
     
   }
 
@@ -101,7 +96,7 @@ export class ListService {
   // POST //
   async addItem(item){
     let status:number;
-    let returnedItem = await this.findItem(item.id);
+    let returnedItem = await this.findItem(item.title);
 
     console.log("returnedItem")
     console.log(returnedItem)
@@ -113,7 +108,8 @@ export class ListService {
     else{
       console.log("ITEM NOT FOUND!!!")
       status = 200;
-      this.db.list('movies').update(item.id, item)
+      this.db.list( 'lists_' + this.user.uid ).update(item.title.toString(), item)
+      //this.db.list('movies').update(item.id, item)
       console.log("Item added")
     }
 
@@ -125,7 +121,7 @@ export class ListService {
   ////////////
   // DELETE //
   async deleteItem(item){
-    this.db.list('movies').remove(item.id.toString());
+    this.db.list( 'lists_' + this.user.uid ).remove(item.title.toString());
 
 
   }

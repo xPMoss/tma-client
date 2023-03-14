@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 // rxjs
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { isObservable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 // firebase
 import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angular/fire/compat/database';
@@ -33,6 +35,7 @@ export class MovieService {
   listsLoading:boolean = true;
   moviesLoading:boolean = true;
 
+  $lists:Observable<any> = new Observable;
 
   //
   recommendedMovies:Movie[];
@@ -54,7 +57,7 @@ export class MovieService {
   cList: List;
   cLists: List[] = [];
 
-  cMovie: Movie;
+  cMovie:Movie;
   cMovies:Movie[] = [];
 
   cTag:Keyword[];
@@ -82,6 +85,7 @@ export class MovieService {
     private http:HttpClient, 
     public afAuth: AngularFireAuth 
     ) {
+
     console.log("MovieService()")
     console.log(authService.user)
     
@@ -208,6 +212,7 @@ export class MovieService {
   }
 
   loadUserMovies(){
+
     // Load lists
     this.lists = this.db.list('lists_' + this.user.uid, ref => ref.orderByChild('title'));
     this.lists.valueChanges().subscribe( (ls) => {
@@ -222,7 +227,7 @@ export class MovieService {
         
       })
       
-
+      
     })
 
     // Load movies
@@ -255,17 +260,17 @@ export class MovieService {
 
       // Load info
       for (const m of this.aMovies) {
-        await m.preload();
+        m.preload();
 
       };
 
       // Load images and misc
       for (const m of this.aMovies) {
         // nm = new movie
-        let show = await m.checkRating()
+        let show = m.checkRating()
         
         if ( show ) {
-          await m.init();
+          m.init();
 
         }
         
@@ -309,11 +314,40 @@ export class MovieService {
       
     })
 
-    
 
 
   }
 
+  loadMovies(){
+    let obj = new Promise<any>((resolve)=> {
+      this.db.list('movies_' + this.user.uid, ref => ref.orderByChild('title')).valueChanges().subscribe( 
+        data => resolve(data) 
+        )
+
+    })
+
+    console.log("obj")
+    console.log(obj)
+
+    return obj;
+
+  }
+
+  loadLists(){
+
+    let obj = new Promise<any>((resolve)=> {
+      this.db.list('lists_' + this.user.uid, ref => ref.orderByChild('title')).valueChanges().subscribe( 
+        data => resolve(data) 
+        )
+
+    })
+
+    console.log("obj")
+    console.log(obj)
+
+    return obj;
+
+  }
 
 
   async loadMoviesTmdb(type):Promise<Movie[]>{
@@ -444,7 +478,9 @@ export class MovieService {
   // GET/:name //
   findItem(name){
     let obj = new Promise<any>((resolve)=> {
-      this.db.list( 'movies_' + this.user.uid, ref => ref.orderByChild('name').equalTo( name ) ).valueChanges().subscribe( data => resolve(data) )
+      this.db.list( 'movies_' + this.user.uid, ref => ref.orderByChild('name').equalTo( name ) ).valueChanges().subscribe( 
+        data => resolve(data) 
+        )
 
     })
 
@@ -492,7 +528,7 @@ export class MovieService {
     else{
       console.log("ITEM NOT FOUND!!!")
       status = 200;
-      this.db.list('movies').update(item.id, item)
+      this.db.list( 'movies_' + this.user.uid ).update(item.id, item)
       console.log("Item added")
     }
 

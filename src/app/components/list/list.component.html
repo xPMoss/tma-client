@@ -3,19 +3,63 @@
 <!-- | List component | -->
 
 
-<div class="container-fluid p-4 mb-4" >
+<div class="container-fluid p-0 m-0" >
     
     <!--  -->
-    <div class="row">
+    <div class="row p-0 m-0 pb-4 mb-4 text-truncate border-bottom" *ngFor="let list of aLists">
+        <div class="col p-0 m-0">
+            <div>
+                <b>{{list.title}}</b>
+            </div>
+            <small>
+                {{list.info}}
+            </small>
+        </div>
+        
+        <div class="col-auto">
+            <button type="button" class="col-auto btn btn-sm btn-outline-danger" (click)="deleteList(list)"> 
+                Delete list
+            </button>
+        </div>
+        <div class="col-w100 mb-2"></div>
+        <div class="col-2 col-sm-1 p-0 m-0 text-truncate" *ngFor="let movie of list.movies">
+            <!--<small class="col p-0 m-0">{{ movie.title }}</small><br/>-->
 
-        <div class="col-6 col-sm-2 p-0 m-0 mb-4 text-truncate" *ngFor="let list of ms.aLists">
-            {{list.title}}
+            <img class="img-fluid rounded btn p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
+            <img class="img-fluid rounded btn p-0 m-0" src="{{movie.base_url + 'w400' + movie.poster_path}}" *ngIf="!movie.poster_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
         </div>
 
 
     </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-outline-success" *ngIf="!newList" (click)="newList=true"> 
+               New List
+            </button>
 
-    
+            <div class="" *ngIf="newList">
+                <input type="text" class="form-control mb-2" placeholder="List name" #listname autocomplete="off" maxlength="50" required>
+                <input type="text" class="form-control mb-2" placeholder="Description" #listinfo autocomplete="off" maxlength="50">
+                <div class="col-w100"></div>
+                <button type="button" class="btn btn-outline-secondary me-2" (click)="newList=false"> 
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-outline-success" (click)="addList({
+                        info:listinfo.value,
+                        title:listname.value
+                      }
+                    )"> 
+                    Ok
+                </button>
+            </div>
+
+            
+            
+        </div>
+        <div class="col"></div>
+
+    </div>
 
 
 

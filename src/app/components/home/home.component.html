@@ -20,8 +20,8 @@
     <div class="row mb-4" *ngIf="!ms.popularMovies">
         <div class="col-w100 p-4 m-4"></div>
         <h6 class="col-auto mx-auto align-middle"> LOADING MOVIES ({{ms.popularMovies.length}})</h6>
-
     </div>
+
     <div class="row mb-4" *ngIf="ms.popularMovies">
         <h4 class="col-12">Popular movies</h4> 
 
@@ -109,10 +109,12 @@
                 -->  
                 <!--<div class="col-12 rounded m-0 bg-light border ratio" style="--bs-aspect-ratio: 120%;" *ngIf="movie.poster_loading"></div>--> 
                 <div *ngIf="movie.loading">  
+                   
                     <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
                     
                 </div>
                 <div *ngIf="!movie.loading">
+                   
                     <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
                     <img class="img-fluid rounded p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path" *ngIf="!movie.poster_loading"/>
                 </div>
@@ -126,6 +128,7 @@
     <!-- | TRENDING | -->
     <div class="row mb-4" *ngIf="!ms.trendingMovies">
         <div class="col-w100 p-4 m-4"></div>
+        
         <h6 class="col-auto mx-auto align-middle"> LOADING MOVIES ({{ms.trendingMovies.length}})</h6>
 
     </div>
@@ -133,7 +136,6 @@
         <h4 class="col-12">Trending movies</h4>
         
         <div class="col-6 col-sm-3 btn p-0 m-0" *ngFor="let movie of ms.trendingMovies | slice:0:4;" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}">
-
             <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
             <img class="img-fluid rounded p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path" *ngIf="!movie.poster_loading"/>
 

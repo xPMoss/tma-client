@@ -15,6 +15,7 @@ import { DiscoverService } from "../../shared/services/discover.service";
 
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
+import { MsgService } from "../../shared/services/msg.service";
 
 
 // Models
@@ -72,6 +73,7 @@ export class MovieDetailComponent {
         public ds:DiscoverService,
         public auth:AuthService,
         public router:Router,
+        private msg:MsgService
         ){
        
     }

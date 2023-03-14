@@ -130,10 +130,10 @@ export class DiscoverService {
 
       for (const m of movies) {
 
-        let show = await m.checkRating()
+        let show = m.checkRating()
   
         if ( show ) {
-          await m.init();
+          m.init();
           
           
         }

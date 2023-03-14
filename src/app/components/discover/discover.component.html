@@ -55,12 +55,12 @@
 
 <div class="container-fluid" *ngIf="ds.cMovies.length > 0">
     <div class="row" >
-        <div class="col-6 col-md-4 m-0 p-0 mb-4 px-2" *ngFor="let movie of ds.cMovies">
+        <div class="col-4 col-md-3 m-0 p-0 mb-4 px-2" *ngFor="let movie of ds.cMovies">
             <div class="col-12 mb-2 text-truncate">
                 {{ movie.title }}
             </div>
             <!-- Image -->
-            <div class="col-12 btn">
+            <div class="col-12 btn p-0 m-0">
                 <img class="img-fluid rounded" src="https://via.placeholder.com/400x600?text=LOADING" *ngIf="movie.poster_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
                 <img class="img-fluid rounded" src="{{movie.base_url + 'w400' + movie.poster_path}}" *ngIf="movie.poster_path && !movie.poster_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
             </div>

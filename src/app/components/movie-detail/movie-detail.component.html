@@ -82,7 +82,7 @@
 
                 <div class="col-auto border-end mb-2" *ngIf="movie.saved == true">
                     <button class="p-0 px-2 py-1 btn btn-success btn-sm" *ngIf="movie.favorite">Favorite</button>
-                    <button class="p-0 px-2 py-1 btn btn-outline-success btn-sm" *ngIf="!movie.favorite">Not favorite</button>
+                    <button class="p-0 px-2 py-1 btn btn-outline-success btn-sm" *ngIf="!movie.favorite">Favorite</button>
 
                 </div>
 
@@ -126,7 +126,7 @@
                                     <div *ngIf=" !checkIfInList(list); ">{{list.title}}</div>
                                 </button>
                                 <button ngbDropdownItem >
-                                    <div >New list...</div>
+                                    <div>New list...(W.I.P)</div>
                                 </button>
                             </div>
                         </div>
@@ -152,7 +152,7 @@
 
             <!-- Providers -->
             <div class="row my-2" *ngIf="movie.flatrate">
-                <div class="col-2 col-md-1 col-lg-4 d-inline" *ngFor="let provider of movie.flatrate">
+                <div class="col-2 col-md-1 col-lg-3 d-inline m-0 mb-sm-2 pe-0" *ngFor="let provider of movie.flatrate">
                     <img class="col-auto col-lg-4 img-fluid rounded d-inline p-0" src="{{movie.base_url + 'w200' + provider.logo_path}}" ngbPopover="{{provider.provider_name}}"/>
                     <div class="col-auto d-none d-lg-inline my-auto ps-2">{{provider.provider_name}}</div>
                 </div>
