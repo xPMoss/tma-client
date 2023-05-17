@@ -312,7 +312,7 @@ export class TmdbService {
         url += "&language=" + "sv";
         url += "&include_adult=false";
         url += "&include_video=false";
-        url += "&page=1";
+        url += "&page=" + params.page;
     
         url += "&certification_country=US";
     
@@ -340,9 +340,9 @@ export class TmdbService {
     
         const response = await fetch(url);
         let movies = await response.json();
-        movies = movies.results;
+       
     
-        console.log("discoverMoviesTmdb url" + url); // DEBUGGING
+        //console.log("discoverMoviesTmdb: " + url); // DEBUGGING
         //console.log("Discover: " + movies); // DEBUGGING
     
         return movies 

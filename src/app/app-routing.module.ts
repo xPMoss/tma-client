@@ -1,21 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { HomeComponent } from "./components/home/home.component";
-import { MovieComponent } from "./components/movie/movie.component";
-import { MovieDetailComponent } from "./components/movie-detail/movie-detail.component";
-import { ListComponent } from "./components/list/list.component";
-import { ProfileComponent } from "./components/profile/profile.component";
-import { SettingsComponent } from "./components/settings/settings.component";
-import { DiscoverComponent } from "./components/discover/discover.component";
-import { SearchPageComponent } from "./components/search-page/search-page.component";
+import { HomeComponent } from "./pages/home/home.component";
+import { MovieComponent } from "./pages/movie/movie.component";
+import { MovieDetailComponent } from "./pages/movie-detail/movie-detail.component";
+import { ListComponent } from "./pages/list/list.component";
+import { ProfileComponent } from "./pages/profile/profile.component";
+import { SettingsComponent } from "./pages/settings/settings.component";
+import { DiscoverComponent } from "./pages/discover/discover.component";
+import { SearchPageComponent } from "./pages/search-page/search-page.component";
 
 // -->
-import { SignInComponent } from './components/sign-in/sign-in.component';
-import { SignUpComponent } from './components/sign-up/sign-up.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
-import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
+import { SignInComponent } from './pages/sign-in/sign-in.component';
+import { SignUpComponent } from './pages/sign-up/sign-up.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { VerifyEmailComponent } from './pages/verify-email/verify-email.component';
 // <--
 
 // route guard

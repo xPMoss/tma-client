@@ -13,7 +13,6 @@ export class List{
     
     movies?:Movie[] = [];
 
-
     show?:boolean = false;
 
     constructor(){

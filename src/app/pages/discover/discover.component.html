@@ -1,5 +1,11 @@
 
 
+<!--
+<div class="col-auto m-0 p-0 px-2" *ngFor="let movie of ds.cMovies | slice:ds.result.min:ds.result.max">
+    {{movie.title}}
+</div>
+-->
+
 <div class="container-fluid mb-4 px-4">
     <div class="row">
         <div class="col-auto p-0 m-0 mb-2" >By genre:&nbsp;</div>
@@ -18,6 +24,9 @@
         <div class="col-auto p-0 m-0 mb-2" >Sort:&nbsp;</div>
     </div>
     <div class="row">
+        <div class="col-auto p-0 m-0">
+            <button class="p-0 px-2 py-1 btn btn-outline-dark btn-sm me-2 mb-2" (click)="ds.sortArrayBy(ds.cMovies, 'popularity', '')">Default</button>
+        </div>
         <div class="col-auto p-0 m-0">
             <button class="p-0 px-2 py-1 btn btn-outline-dark btn-sm me-2 mb-2" (click)="ds.sortArrayBy(ds.cMovies, 'title', '')">Title</button>
         </div>
@@ -52,10 +61,15 @@
     popularity.asc, popularity.desc, release_date.asc, release_date.desc, revenue.asc, revenue.desc, primary_release_date.asc, primary_release_date.desc, original_title.asc, original_title.desc, vote_average.asc, vote_average.desc, vote_count.asc, vote_count.desc
     default: popularity.desc - optional
 -->
+<div class="container-fluid mb-4" *ngIf="ds.cMovies.length > 0">
+    <h4>Results: {{ds.cMovies.length}}</h4>
+</div>
 
+
+<!-- RESULT -->
 <div class="container-fluid" *ngIf="ds.cMovies.length > 0">
     <div class="row" >
-        <div class="col-4 col-md-3 m-0 p-0 mb-4 px-2" *ngFor="let movie of ds.cMovies">
+        <div class="col-4 col-md-3 col-lg-2 m-0 p-0 mb-4 px-2" *ngFor="let movie of ds.cMovies | slice:ds.result.min:ds.result.max">
             <div class="col-12 mb-2 text-truncate">
                 {{ movie.title }}
             </div>
@@ -69,8 +83,45 @@
     
     </div>
     
+    
 </div>
 
+<!--  PAGINATION -->
+<div class="d-flex mx-auto justify-content-center" *ngIf="ds.result.total_pages > 1 && ds.loadingMovies">
+
+    <button class="col-auto btn btn-outline-dark btn-sm disabled" *ngIf="ds.result.current_page <= 1" >
+        Prev
+    </button>
+    
+    <div class="col-auto mx-4">
+        {{ "Page 1 of ?" }}
+    </div>
+
+    <div class="col-auto btn btn-outline-dark btn-sm disabled" *ngIf="ds.result.current_page == ds.result.pages" >
+        Next
+    </div>
+</div>
+
+<div class="d-flex mx-auto justify-content-center" *ngIf="ds.result.total_pages > 1 && !ds.loadingMovies">
+    <button class="col-auto btn btn-outline-dark btn-sm" *ngIf="ds.result.current_page > 1" (click)="ds.result.current_page = ds.result.current_page-1; ds.result.navigate(-1);">
+        Prev
+    </button>
+    <button class="col-auto btn btn-outline-dark btn-sm disabled" *ngIf="ds.result.current_page <= 1" >
+        Prev
+    </button>
+    
+    <div class="col-auto mx-4"> 
+        {{ "Page " + ds.result.current_page + " of " + ds.result.pages }}
+    </div>
+
+    
+    <div class="col-auto btn btn-outline-dark btn-sm" *ngIf="ds.result.current_page < ds.result.pages" (click)="ds.result.current_page = ds.result.current_page+1; ds.result.navigate(1);">
+        Next
+    </div>
+    <div class="col-auto btn btn-outline-dark btn-sm disabled" *ngIf="ds.result.current_page == ds.result.pages" >
+        Next
+    </div>
+</div>
 
 <!-- Loading -->
 <div class="container-fluid pb-4 mb-4" *ngIf="ds.cMovies.length < 1 && ds.loadMovies">

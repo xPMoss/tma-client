@@ -644,14 +644,14 @@ class Timer{
     }
 
     start(){
-        console.log("timer.start()")
+        //console.log("timer.start()")
         this.nIntervId = setInterval(this.count, 1000);
     }
 
 
 
     stop(){
-        console.log("timer.stop()")
+        //console.log("timer.stop()")
         clearInterval(this.nIntervId)
     
     }
@@ -754,7 +754,7 @@ export class Movie{
         time:null
     }
 
-    constructor(data){
+    constructor(data:any){
         //console.log("Movie.constructor()")
 
         // LOADING
@@ -764,11 +764,6 @@ export class Movie{
         this.backdrop_loading = true;
         this.posters_loading = true;
         this.backdrops_loading = true;
-
-        
-        if(data.title == "Medieval"){
-            
-        }
 
         this.timer = new Timer();
         this.tmdb = new TmdbService(this.http);
@@ -893,20 +888,23 @@ export class Movie{
             //console.log("Certify")
             await this.setCert(certifications);
 
-            if (this.certifications.avg_rating > 18) {
-                debugStr += "ADULT:[" + this.title + "]"
-                
-                
+            if (this.certifications.avg_rating > 12) {
+                debugStr += "[AGE<"+ this.certifications.avg_rating +"]"
+                debugStr += ":[" + this.title + "]"
+                show = false;
             }
             else{
-                debugStr += "CHILD:[" + this.title + "]"
+                debugStr += "-----[SHOW][AGE<"+ this.certifications.avg_rating +"]"
+                debugStr += ":[" + this.title + "]"
+                debugStr += ":[SHOW]-----"
                 show = true;
                 
             }
 
         }
 
-        //console.log(debugStr)
+        console.log(debugStr);
+
         return show;
 
     }

@@ -378,7 +378,13 @@ export class MovieService {
       for (const m of data) {
         // nm = new movie
         let nm = new Movie(m);
-        movies.push(nm)
+        
+        // Check if is age appropriate
+        let show = await nm.checkRating()
+        if ( show ) {
+          movies.push(nm);
+          
+        }
         
 
       };
@@ -389,12 +395,7 @@ export class MovieService {
       }
 
       for await (const d of movies) {
-        let show = await d.checkRating()
-  
-        if ( show ) {
-          await d.init();
-          
-        }
+        await d.init();
   
       }
 
@@ -404,6 +405,7 @@ export class MovieService {
 
     let movies:Movie[] = await loadmovies();
 
+    /*
     while (movies.length < 20) {
       page++;
       let more:Movie[] = await loadmovies();
@@ -423,27 +425,11 @@ export class MovieService {
         
       }
     }
-
-    let str = ""
-    for (const m of movies) {
-      str += "[" + m.title + "], ";
-
-    }
-
-    //console.log(str)
-
-    /*
-    for await (const movie of tmdb) {
-      let m = new Movie(movie);
-      let show = await m.checkRating()
-
-      if ( show ) {
-        movies.push(m)
-        //await movie.init();
-      }
-
-    }
     */
+
+
+  
+    
     
     return movies;
 

@@ -11,6 +11,7 @@ import { AngularFireDatabase, AngularFireObject, AngularFireList } from '@angula
 // Models
 import { Genre, Keyword, Movie } from "../models/movie.model";
 import { List } from "../models/list.model";
+import { Result } from "../models/result.model";
 
 import { genres as genresdb } from 'src/assets/db';
 
@@ -28,6 +29,8 @@ export class DiscoverService {
 
   cList: List;
   cLists: List[] = [];
+
+  result:Result = new Result();
 
   movies:AngularFireList<Movie>;
   movie:Movie;
@@ -48,6 +51,7 @@ export class DiscoverService {
   cGenres:Genre[] = [];
 
   loadMovies:boolean = false;
+  loadingMovies:boolean = false;
   sortBy:string = "popularity.desc";
   
   public tmdbGenres = genresdb;
@@ -60,7 +64,7 @@ export class DiscoverService {
   }
 
 
-  setMovies(){
+  async setMovies(){
     console.log(this.constructor.name + ".setMovies()")
 
     this.loadMovies = false;
@@ -101,70 +105,97 @@ export class DiscoverService {
     }
 
     if (this.loadMovies) {
-      this.loadMoviesTmdb(params).then( async (data)=>{
-        console.log(data)
-        this.cMovies = data;
-  
-      })
+      this.result = await this.preSearch(params);
+
+      let tries = 0;
+      this.loadingMovies = true;
+
+      while(this.cMovies.length < 100 && this.result.total_pages > this.result.page && tries < 100){
+        tries++;
+
+        await this.loadMoviesTmdb(params).then( async (data)=>{
+          console.log(data)
+
+          for (const d of data) {
+            this.cMovies.push(d);
+
+          }
+
+        })
+
+        this.result.page++;
+        
+      }
+
+      this.result.movies = this.cMovies.length;
+      this.result.pages = Math.ceil(this.cMovies.length / 20);
+      this.loadingMovies = false;
+
     }
     
 
 
   }
 
+  async preSearch(params):Promise<Result>{
+    
+    params.page = this.result.page;
+
+    let data:any;
+    let result:Result = new Result();
+
+    data = await this.tmdb.movieDiscoverTmdb(params);
+
+    console.log("|||||DATA|||||")
+    console.log(data)
+
+    result.results = data.results;
+    result.total_pages = data.total_pages;
+    result.total_results = data.total_results;
+
+    
+
+    return result;
+
+
+  }
+
+
   async loadMoviesTmdb(params):Promise<Movie[]>{
     
-    let page = 1
+    params.page = this.result.page;
 
     let loadmovies = async()=>{
-      let data:Movie[];
+      let data:any;
       let movies:Movie[] = [];
 
       data = await this.tmdb.movieDiscoverTmdb(params);
 
-      for (const d of data) {
+      let _movies = data.results;
+
+      this.result.total_pages = data.total_pages;
+      this.result.total_results = data.total_results;
+
+      for (const d of _movies) {
         let m = new Movie(d);
-        m.preload();
-        movies.push(m)
-      }
 
-      for (const m of movies) {
-
-        let show = m.checkRating()
-  
+        // Check if is age appropriate
+        let show = await m.checkRating()
         if ( show ) {
           m.init();
-          
+          m.preload();
+          movies.push(m);
           
         }
-  
+        
       }
-
+     
       return movies;
 
     };
 
+    
     let movies:Movie[] = await loadmovies();
-
-    while (movies.length < 20) {
-      page++;
-      let more:Movie[] = await loadmovies();
-      for (const m of more) {
-        movies.push(m)
-        
-      }
-
-    }
-
-    // If < 20 load more movies
-    if (movies.length < 20) {
-      page++;
-      let more:Movie[] = await loadmovies();
-      for (const m of more) {
-        movies.push(m)
-        
-      }
-    }
 
     return movies;
 
@@ -173,6 +204,8 @@ export class DiscoverService {
 
   reset(){
     console.log(this.constructor.name + ".reset()")
+
+    this.result = new Result();
 
     for (const iterator of this.tmdbGenres) {
       iterator.active = false;
