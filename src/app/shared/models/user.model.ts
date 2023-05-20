@@ -1,8 +1,16 @@
 
+export class Settings{
+
+    ageRating?:number;
+
+    constructor(){
+        this.ageRating = 18;
+
+     }
+}
 
 
-class Prefs{
-
+export class Prefs{
 
     showAs?:string;
 
@@ -11,6 +19,11 @@ class Prefs{
         max:10,
     }
 
+    favorite = {
+        movies:[],
+        genres:[],
+        keywords:[],
+    }
 
     liked = {
         movies:[],
@@ -32,12 +45,12 @@ class Prefs{
 
 
     constructor(){
-        this.vote.min = 0;
+    
     }
 
 }
 
-class Stats{
+export class Stats{
 
     liked = {
         movies:[],
@@ -54,7 +67,7 @@ class Stats{
 
 
     constructor(){
-
+       
     }
 
 }
@@ -73,8 +86,11 @@ export class User{
     certification?:number;
 
     name?:string;
+    age?:number;
+
     loaded?:boolean = false;
 
+    settings?:Settings = new Settings();
     prefs?:Prefs;
     stats?:Stats;
 
@@ -83,6 +99,8 @@ export class User{
         this.loaded = false
         this.prefs = new Prefs;
         this.prefs.showAs = "poster"
+
+       
         
     }
 

@@ -16,6 +16,9 @@ import { Movie } from "../models/movie.model";
 import { TmdbService } from "./tmdb.service";
 import { TmdbResult } from "../models/tmdb.model";
 
+import { AuthService } from './auth.service';
+
+
 @Injectable({ providedIn: 'root' })
 export class SearchService {
 
@@ -30,7 +33,7 @@ export class SearchService {
   trendingMovies: Observable<TmdbResult>
 
 
-  constructor( private db:AngularFireDatabase, public tmdb:TmdbService ) {
+  constructor( private db:AngularFireDatabase, public tmdb:TmdbService, private authService:AuthService, ) {
     console.log("SearchService()")
     
 

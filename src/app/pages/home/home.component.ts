@@ -23,6 +23,8 @@ export class HomeComponent {
   title = 'Home';
   debug:boolean = true;
 
+  
+
   constructor(public hs:HomeService, public ms:MovieService, public tmdb:TmdbService){
 
   }

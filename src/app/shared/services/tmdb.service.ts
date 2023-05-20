@@ -440,7 +440,7 @@ export class TmdbService {
         let data = await response.json();
         let result = data.results;
         
-        return result;
+        return data;
 
     }
 
@@ -461,7 +461,7 @@ export class TmdbService {
         let data = await response.json();
         let result = data.results;
         
-        return result;
+        return data;
 
     }
 
@@ -493,7 +493,7 @@ export class TmdbService {
 
        
 
-        return result; 
+        return data; 
         
     }
 

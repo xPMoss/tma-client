@@ -12,7 +12,7 @@
     </div>
     <div class="row">
         <div class="col-auto p-0 m-0" *ngFor="let g of ds.tmdbGenres">
-            <button class="p-0 px-2 py-1 btn btn-outline-dark btn-sm me-2 mb-2" *ngIf="!g.active" (click)="ds.reset(); ds.cGenres[0] = g; ds.setMovies();">{{g.name}} </button>
+            <button class="p-0 px-2 py-1 btn btn-outline-dark btn-sm me-2 mb-2" *ngIf="!g.active" (click)="ds.reset(); ds.cGenres[0] = g; ds.loadMovies();">{{g.name}} </button>
             <button class="p-0 px-2 py-1 btn btn-dark btn-sm me-2 mb-2" *ngIf="g.active">{{g.name}} </button>
         </div>
 
@@ -63,6 +63,7 @@
 -->
 <div class="container-fluid mb-4" *ngIf="ds.cMovies.length > 0">
     <h4>Results: {{ds.cMovies.length}}</h4>
+    <p *ngIf="ds.loadingMovies">Searching</p>
 </div>
 
 
@@ -86,7 +87,19 @@
     
 </div>
 
-<!--  PAGINATION -->
+<!-- LOAD MORE -->
+<div class="d-flex mx-auto justify-content-center" *ngIf="ds.result.moviesLoaded > 0">
+    <div class="col-auto btn btn-outline-dark btn-sm" (click)="ds.loadMovies(); ds.result.navigate(1);" *ngIf="!ds.loadingMovies">
+        Load more movies
+    </div>
+    <div class="col-auto btn btn-outline-dark btn-sm disabled" (click)="ds.loadMovies(); ds.result.navigate(1);" *ngIf="ds.loadingMovies">
+        Searching for movies
+    </div>
+</div>
+
+
+<!-- PAGINATION -->
+<!--
 <div class="d-flex mx-auto justify-content-center" *ngIf="ds.result.total_pages > 1 && ds.loadingMovies">
 
     <button class="col-auto btn btn-outline-dark btn-sm disabled" *ngIf="ds.result.current_page <= 1" >
@@ -122,9 +135,11 @@
         Next
     </div>
 </div>
+-->
+
 
 <!-- Loading -->
-<div class="container-fluid pb-4 mb-4" *ngIf="ds.cMovies.length < 1 && ds.loadMovies">
+<div class="container-fluid pb-4 mb-4" *ngIf="ds.cMovies.length < 1 && ds.loadingMovies">
     <div class="row pb-4 mb-4">
         <div class="col-w100 pb-4 mb-4"></div>
         <h6 class="col-auto mx-auto align-middle">Loading...</h6>

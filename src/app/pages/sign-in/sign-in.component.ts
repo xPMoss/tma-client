@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+// rjxs -->
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
 
 import { AuthService } from "../../shared/services/auth.service";
 import { Router } from '@angular/router';
@@ -17,7 +20,6 @@ export class SignInComponent implements OnInit {
 
   ngOnInit(): void {
 
-
   }
 
 
@@ -26,7 +28,14 @@ export class SignInComponent implements OnInit {
 
     await this.authService.SignIn(userName.value, userPassword.value)
 
-    this.router.navigate(['dashboard']);
+  
+    
+  }
+
+
+  async GoogleAuth(){
+
+    await this.authService.GoogleAuth()
     
   }
 

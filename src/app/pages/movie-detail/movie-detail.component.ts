@@ -80,17 +80,13 @@ export class MovieDetailComponent {
     
     ngOnInit(){
         console.log("MovieDetailComponent.ngOnInit()")
-        
-        if (this.ms.cMovies.length < 1) {
-            this.ms.loadUserMovies();
-            
-        }
+
+       
 
         if (this.ms.page) {
             localStorage.setItem('page', this.ms.page);
         }
         
-
         //const cat = localStorage.getItem('myCat');
         //localStorage.setItem('myCat', 'Tom');
         //localStorage.removeItem('myCat');
@@ -112,32 +108,38 @@ export class MovieDetailComponent {
                 await movie.preload();
                 await movie.init();
                 this.ms.cMovie = movie;
-
-                await this.loadMovie(Number(this.ms.cMovie.id));
-                await this.getSimilarMovies(this.ms.cMovie.id);
-                await this.loadLists();
-
                 
             }
-            else{
+
+            if(this.isLoggedIn){
+                if (this.ms.cMovies.length < 1) {
+                    this.ms.loadUserMovies();
+                    
+                }
+
                 console.log("cMovie is present")
-                //this.checkIfSaved()
 
                 await this.loadMovie(this.ms.cMovie.id);
-                await this.getSimilarMovies(this.ms.cMovie.id);
                 await this.loadLists();
                 
                 localStorage.setItem('cMovie', this.ms.cMovie.id.toString());
 
             }
 
+            await this.getSimilarMovies(this.ms.cMovie.id);
+
+            window.scroll({ 
+                top: 0, 
+                left: 0, 
+                behavior: 'auto'
+            });
         }
 
         check();
 
         
 
-      
+        
         
 
         
@@ -190,11 +192,6 @@ export class MovieDetailComponent {
                 this.ms.cMovie.saved = false;
                 this.ms.cMovie.lists = [];
             }
-
-            //let cookies = document.cookie;
-            console.log(id)
-            console.log("this.ms.cMovie")
-            console.log(this.ms.cMovie)
 
         })
 
@@ -414,6 +411,7 @@ export class MovieDetailComponent {
     similar(movie){
         this.ms.cMovie = movie;
         this.router.navigate(['movie/' + movie.id])
+       
         this.ngOnInit();
 
 

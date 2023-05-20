@@ -14,13 +14,14 @@ export class Result{
 
     results:any[] = new Array();
 
-    
-    
     movies:number;
     pages:number = 1;
     current_page:number = 1;
     min:number = 0;
     max:number = 20;
+
+    moviesToLoad:number = 20;
+    moviesLoaded:number = 0;
 
     constructor(){
 
@@ -33,15 +34,17 @@ export class Result{
             this.max -= 20;
        }
        else{
-        this.min += 20
+        //this.min += 20
         this.max += 20;
        }
 
+       /*
        window.scroll({ 
             top: 0, 
             left: 0, 
             behavior: 'auto' 
         });
+        */
 
     }
 

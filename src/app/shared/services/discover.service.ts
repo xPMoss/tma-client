@@ -17,6 +17,7 @@ import { genres as genresdb } from 'src/assets/db';
 
 // Tmdb
 import { TmdbService } from "./tmdb.service";
+import { AuthService } from './auth.service';
 
 import { movies as moviedb } from 'src/assets/db';
 
@@ -50,7 +51,6 @@ export class DiscoverService {
   cKeywords:Keyword[] = [];
   cGenres:Genre[] = [];
 
-  loadMovies:boolean = false;
   loadingMovies:boolean = false;
   sortBy:string = "popularity.desc";
   
@@ -58,21 +58,16 @@ export class DiscoverService {
 
 
 
-  constructor( private db:AngularFireDatabase, public tmdb:TmdbService ) {
+  constructor( private db:AngularFireDatabase, public tmdb:TmdbService, private authService:AuthService,  ) {
     console.log("DiscoverService()")
 
   }
 
 
-  async setMovies(){
+  async loadMovies(){
     console.log(this.constructor.name + ".setMovies()")
 
-    this.loadMovies = false;
-
-    let params = {
-      sort_by: this.sortBy,
-      with_genres: []
-    };
+    
     /*
     popularity.asc, popularity.desc, release_date.asc, release_date.desc, revenue.asc, revenue.desc, primary_release_date.asc, primary_release_date.desc, original_title.asc, original_title.desc, vote_average.asc, vote_average.desc, vote_count.asc, vote_count.desc
     default: popularity.desc - optional
@@ -84,6 +79,13 @@ export class DiscoverService {
     this.cKeywords = []
     this.cGenres = []
     */
+
+    this.loadingMovies = true;
+
+    let params = {
+      sort_by: this.sortBy,
+      with_genres: []
+    };
 
     for (const iterator of this.cGenres) {
       for (const g of this.tmdbGenres) {
@@ -97,41 +99,41 @@ export class DiscoverService {
       }
       console.log("genre: " + iterator.name)
       
+    }
 
-      if (!this.loadMovies) {
-        this.loadMovies = true;
-      }
+    this.loadingMovies = true;
+
+    // Preload movies
+    if (this.result.moviesLoaded < 1) {
+      this.result = await this.preSearch(params);
+    }
+    
+
+    // Find movies
+    let tries = 0;
+
+    while(this.result.moviesLoaded < this.result.moviesToLoad && this.result.total_pages > this.result.page && tries < 10){
+      tries++;
+
+      await this.loadMoviesTmdb(params).then( async (data)=>{
+        console.log(data)
+
+        for (const d of data) {
+          this.cMovies.push(d);
+          this.result.moviesLoaded++;
+
+        }
+
+      })
+
+      this.result.page++;
       
     }
 
-    if (this.loadMovies) {
-      this.result = await this.preSearch(params);
-
-      let tries = 0;
-      this.loadingMovies = true;
-
-      while(this.cMovies.length < 100 && this.result.total_pages > this.result.page && tries < 100){
-        tries++;
-
-        await this.loadMoviesTmdb(params).then( async (data)=>{
-          console.log(data)
-
-          for (const d of data) {
-            this.cMovies.push(d);
-
-          }
-
-        })
-
-        this.result.page++;
-        
-      }
-
-      this.result.movies = this.cMovies.length;
-      this.result.pages = Math.ceil(this.cMovies.length / 20);
-      this.loadingMovies = false;
-
-    }
+    this.result.movies = this.cMovies.length;
+    this.result.pages = Math.ceil(this.cMovies.length / 20);
+    this.result.moviesToLoad = this.result.moviesLoaded + 20;
+    this.loadingMovies = false;
     
 
 
@@ -152,8 +154,6 @@ export class DiscoverService {
     result.results = data.results;
     result.total_pages = data.total_pages;
     result.total_results = data.total_results;
-
-    
 
     return result;
 
@@ -180,10 +180,15 @@ export class DiscoverService {
         let m = new Movie(d);
 
         // Check if is age appropriate
-        let show = await m.checkRating()
+        let age:number = 16
+        if (this.authService.user) {
+          age = this.authService.user.settings.ageRating;
+        }
+
+        let show = await m.checkRating(age);
         if ( show ) {
-          m.init();
-          m.preload();
+          await m.init();
+          await m.preload();
           movies.push(m);
           
         }

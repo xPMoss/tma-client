@@ -716,6 +716,8 @@ export class Movie{
     // user varibles
     saved?:boolean;
     favorite?:boolean;
+    liked?:boolean;
+    disliked?:boolean;
     seen?:boolean;
     vote?:number|null;
     lists?:string[] = [];
@@ -872,7 +874,7 @@ export class Movie{
     }
 
     // Check age rating
-    async checkRating?(){
+    async checkRating?(age:number){
         //console.log("Movie.checkRating()")
         //console.log(this.id)
 
@@ -888,7 +890,7 @@ export class Movie{
             //console.log("Certify")
             await this.setCert(certifications);
 
-            if (this.certifications.avg_rating > 12) {
+            if (this.certifications.avg_rating > age) {
                 debugStr += "[AGE<"+ this.certifications.avg_rating +"]"
                 debugStr += ":[" + this.title + "]"
                 show = false;
@@ -903,7 +905,7 @@ export class Movie{
 
         }
 
-        console.log(debugStr);
+        //console.log(debugStr);
 
         return show;
 

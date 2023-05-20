@@ -114,8 +114,9 @@
 
         <!-- Show user data when logged in -->
         <div class="row" *ngIf="authService.user?.loaded">
-          <div class="col-12">
 
+          <!--
+          <div class="col-12">
             <div class="input-group mb-3">
               <input type="text" class="form-control" aria-label="Text input with dropdown button">
               <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Dropdown</button>
@@ -127,9 +128,20 @@
                 <li><a class="dropdown-item" href="#">Separated link</a></li>
               </ul>
             </div>
-
-            
           </div>
+          -->
+
+          <div class="col-12">
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">Age rating</span>
+              <select class="form-select" title="rating" id="set-age" (change)="setAge($event);">
+                <option selected value="{{authService.user.settings.ageRating}}">{{authService.user.settings.ageRating}}+</option>
+                <option *ngFor="let a of ages" value="{{a}}">{{a}}+</option>
+              </select>
+            </div>
+          </div>
+
 
           
           <div class="col-12" *ngIf="authService.user?.prefs">

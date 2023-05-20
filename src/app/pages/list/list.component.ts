@@ -95,12 +95,7 @@ export class ListComponent {
       // Load images and misc
       for (const m of this.aMovies) {
         // nm = new movie
-        let show = m.checkRating()
-        
-        if ( show ) {
-          m.init();
-
-        }
+        m.init();
         
       };
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
+import { Prefs, Settings } from 'src/app/shared/models/user.model';
 
 
 @Component({
@@ -11,6 +12,7 @@ import { UserService } from '../../shared/services/user.service';
 export class DashboardComponent implements OnInit {
 
   page:string = "settings";
+  ages:number[] = [7,9,11,13,16,18];
 
   pages:HTMLElement[] = [];
 
@@ -24,11 +26,13 @@ export class DashboardComponent implements OnInit {
   isInline:boolean = false;
 
 
-  constructor(public authService: AuthService) {
+  constructor(public authService: AuthService, public us:UserService) {
     window.addEventListener("resize", (event) => {
       
     });
 
+    
+    
   }
 
   ngOnInit() {
@@ -36,12 +40,20 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  ngAfterViewInit(){
+  ngAfterViewChecked(){
 
-
-    
 
   }
+
+  setAge(event){
+    console.log(event.target.value);
+
+    this.authService.user.settings.ageRating = Number(event.target.value);
+
+    this.us.setItem(this.authService.user)
+
+  }
+
 
 
   setH(){

@@ -47,7 +47,7 @@ export class DiscoverComponent {
 
   ngOnInit() {
     this.isLoggedIn = this.auth.isLoggedIn;
-    this.ds.setMovies();
+    this.ds.reset();
 
    
   }

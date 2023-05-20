@@ -23,6 +23,7 @@ export class UserService {
     constructor( private db:AngularFireDatabase) {
         if(this.debug)console.log("UserService()") // DEBUGGING
 
+        /*
         this.db.list( 'users' ).valueChanges().subscribe( async (data) => {
             if(this.debug)console.log("Users") // DEBUGGING
             if(this.debug)console.log(data) // DEBUGGING
@@ -41,8 +42,24 @@ export class UserService {
                 
             }
         })
+        */
 
     }
+
+
+      /////////
+  // PUT //
+  async setItem(item:any) {
+    console.log("UserService.setItem()")
+    console.log(item.uid)
+
+  
+
+
+    await this.db.list('users').update(item.uid, item)
+    
+  }
+
 
 
 

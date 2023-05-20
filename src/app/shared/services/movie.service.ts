@@ -140,7 +140,7 @@ export class MovieService {
     
     this.afAuth.authState.subscribe( (user) => {
       this.user = user;
-
+      
     });
 
 
@@ -211,7 +211,112 @@ export class MovieService {
 
   }
 
+  async loadMoviesTmdb(type):Promise<Movie[]>{
+    
+    let page = 1
+    let result:any;
+    let movies:Movie[] = [];
+
+    let loadmovies = async()=>{
+      let _movies:Movie[];
+      let movies:Movie[] = [];
+
+      let rated:number = 0;
+
+      if (type == "popular") {
+        result = await this.tmdb.getPopularTmdb(page)
+        
+      }
+      else if (type == "trending") {
+        result = await this.tmdb.getTrendingMovies(page)
+        
+      }
+      else if (type == "toprated") {
+        result = await this.tmdb.getTopRatedTmdb(page)
+        
+      }
+      else{
+        result = null
+      }
+
+      _movies = result.results;
+
+      
+      for (const m of _movies) {
+        // nm = new movie
+        let nm = new Movie(m);
+        
+        // Check if is age appropriate
+        let age:number = 16
+        if (this.authService.user) {
+          age = this.authService.user.settings.ageRating;
+        }
+        let show = await nm.checkRating(age)
+        if ( show ) {
+          await nm.init();
+          await nm.preload();
+          movies.push(nm);
+          rated++
+        }
+        
+        //console.log(type +" - "+ page + " " + _movies.length + "reated: " +rated)
+
+
+      };
+
+      return movies;
+
+    };
+
+    movies = await loadmovies();
+    
+
+    while ( movies.length < 20 && page < result.total_pages) {
+      page++;
+
+      let moreMovies = await loadmovies();
+      for(let m of moreMovies){
+        movies.push(m);
+      }
+      
+
+    }
+    
+    console.log("Found movies: " + movies.length)
+    
+    /*
+    while (movies.length < 20) {
+      page++;
+      let more:Movie[] = await loadmovies();
+      for (const m of more) {
+        movies.push(m)
+        
+      }
+
+    }
+
+    // If < 20 load more movies
+    if (movies.length < 20) {
+      page++;
+      let more:Movie[] = await loadmovies();
+      for (const m of more) {
+        movies.push(m)
+        
+      }
+    }
+    */
+
+
+  
+    
+    
+    return movies;
+
+
+  }
+
   loadUserMovies(){
+
 
     // Load lists
     this.lists = this.db.list('lists_' + this.user.uid, ref => ref.orderByChild('title'));
@@ -267,7 +372,11 @@ export class MovieService {
       // Load images and misc
       for (const m of this.aMovies) {
         // nm = new movie
-        let show = m.checkRating()
+        let age:number = 16
+        if (this.authService.user) {
+          age = this.authService.user.settings.ageRating;
+        }
+        let show = m.checkRating(age)
         
         if ( show ) {
           m.init();
@@ -314,7 +423,7 @@ export class MovieService {
       
     })
 
-
+    return true;
 
   }
 
@@ -350,91 +459,7 @@ export class MovieService {
   }
 
 
-  async loadMoviesTmdb(type):Promise<Movie[]>{
-    
-    let page = 1
-
-    let loadmovies = async()=>{
-      let data:Movie[];
-      let movies:Movie[] = [];
-
-      if (type == "popular") {
-        data = await this.tmdb.getPopularTmdb(page)
-        
-      }
-      else if (type == "trending") {
-        data = await this.tmdb.getTrendingMovies(page)
-        
-      }
-      else if (type == "toprated") {
-        data = await this.tmdb.getTopRatedTmdb(page)
-        
-      }
-      else{
-        data = null
-      }
-
-
-      for (const m of data) {
-        // nm = new movie
-        let nm = new Movie(m);
-        
-        // Check if is age appropriate
-        let show = await nm.checkRating()
-        if ( show ) {
-          movies.push(nm);
-          
-        }
-        
-
-      };
-
-      for (const m of movies) {
-        await m.preload();
-
-      }
-
-      for await (const d of movies) {
-        await d.init();
   
-      }
-
-      return movies;
-
-    };
-
-    let movies:Movie[] = await loadmovies();
-
-    /*
-    while (movies.length < 20) {
-      page++;
-      let more:Movie[] = await loadmovies();
-      for (const m of more) {
-        movies.push(m)
-        
-      }
-
-    }
-
-    // If < 20 load more movies
-    if (movies.length < 20) {
-      page++;
-      let more:Movie[] = await loadmovies();
-      for (const m of more) {
-        movies.push(m)
-        
-      }
-    }
-    */
-
-
-  
-    
-    
-    return movies;
-
-
-  }
 
   //**********************//
   //******** CRUD ********//
@@ -459,6 +484,8 @@ export class MovieService {
     console.log(this.user)
 
     return this.db.list( 'movies_' + this.user.uid, ref => ref.orderByChild('id').equalTo( id ) );
+
+
   }
 
   // GET/:name //
