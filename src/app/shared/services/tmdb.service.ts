@@ -364,6 +364,7 @@ export class TmdbService {
     
         //console.log("Keywords: " + url); // DEBUGGING
         //console.log(keywords); // DEBUGGING
+        //console.log(url); // DEBUGGING
         return keywords; 
         
     }

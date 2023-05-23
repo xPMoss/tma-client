@@ -55,8 +55,8 @@ export class DiscoverService {
   sortBy:string = "popularity.desc";
   
   public tmdbGenres = genresdb;
-
-
+  public tmdbKeywords = genresdb;
+  public tmdbTags = genresdb;
 
   constructor( private db:AngularFireDatabase, public tmdb:TmdbService, private authService:AuthService,  ) {
     console.log("DiscoverService()")

@@ -49,7 +49,10 @@ export class DiscoverComponent {
     this.isLoggedIn = this.auth.isLoggedIn;
     this.ds.reset();
 
-   
+
+    //this.tmdb.getKeywordsTmdb(100).then(response => console.log(response))
+
+    
   }
 
 
