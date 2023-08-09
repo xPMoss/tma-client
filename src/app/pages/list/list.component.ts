@@ -36,27 +36,29 @@ export class ListComponent {
  
   newList:boolean = false;
  
-  constructor(public tmdb:TmdbService, public ms:MovieService, public ls:ListService, private fb:FormBuilder, private msg:MsgService){
+  constructor(
+    public tmdb:TmdbService, 
+    public ms:MovieService, 
+    public ls:ListService, 
+    private fb:FormBuilder, 
+    private msg:MsgService
+    )
+  {
     
   }
 
   ngOnInit() {
     
-    
-    
-
     this.init();
     
     this.cLists = this.lists;
 
     this.listForm = this.fb.group({
       list: [null]
+
     });
 
-
-
-
-    // If no cMovie
+    // Load from localstorage <- NOT WORKING!
     if (!this.cLists) {
       console.log("No cLists!!!")
 
@@ -67,7 +69,6 @@ export class ListComponent {
         localStorage.removeItem('cLists');
         //localStorage.setItem('cLists', this.ms.cMovie.id.toString());
 
-      
     }
 
 
@@ -75,14 +76,14 @@ export class ListComponent {
 
   async init(){
 
+    // Load all movies <- (MovieService) <- [db]
     await this.ms.loadMovies().then( async (data)=>{
       this.aMovies = [];
 
+      // Create movies
       for (const m of data) {
-        // nm = new movie
         let nm = new Movie(m);
         this.aMovies.push(nm)
-        
 
       };
 
@@ -92,111 +93,101 @@ export class ListComponent {
 
       };
 
-      // Load images and misc
+      // Load images and misc <- (MovieClass) <- (TmdbService) <- [Tmdb]
       for (const m of this.aMovies) {
-        // nm = new movie
         m.init();
         
       };
 
     });
 
-    this.aLists = [];
-
+    // Load all lists <- (MovieService) <- [db]
     await this.ms.loadLists().then( (data)=>{
-      
+      this.aLists = [];
 
       for (const list of data) {
-        console.log(list);
         if (list.title != "Saved") {
           this.aLists.push(list);
   
         }
       }
-
       
+      // Reset lists
       for(const l of this.aLists) {
         l.movies = [];
       
       };
 
-      // Add all movies
+      // Add movies to lists
       for (const m of this.aMovies) {
-        // m = movie
-        
-
         for(const l of this.aLists) {
-          // l = list
           if (m.lists.includes(l.title)) {
             l.movies.push(m)
 
           }   
 
-        };
-
-      };
+        }
+      }
 
     });
 
     console.log(this.aLists);
 
-
-
   }
 
   showMsg(value){
     console.log(value)
+
   }
 
 
   submit() {
     console.log("Form Submitted")
     console.log(this.listForm.value)
+
   }
 
   changeList(){
-    //console.log(this.listForm.value.list)
-    //console.log(this.lists)
 
+    // Reset current lists
     this.cLists = [];
-
 
     this.lists.forEach(element => {
       if ( this.listForm.value.list.includes(element.title) ) {
-        //console.log(element.title)
         this.cLists.push(element);
 
       }
-    });
+    })
     
-
   }
 
   addList(data){
-    console.log(data)
+
+    // Create list item
     let item = {
       info:data.info,
       title:data.title,
-    }
 
-    console.log(item)
+    }
 
     if (data.title) {
-      console.log("not empty")
       this.ls.addItem(item);
+
     }
 
-    this.newList=false;
+    this.newList = false;
 
+    // Reload movies and lists
     this.init();
 
   }
 
   deleteList(list){
+
     this.ls.deleteItem(list);
     
+    // Reload movies and lists
     this.init();
-
 
   }
 

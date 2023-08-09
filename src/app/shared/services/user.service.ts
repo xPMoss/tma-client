@@ -50,11 +50,8 @@ export class UserService {
       /////////
   // PUT //
   async setItem(item:any) {
-    console.log("UserService.setItem()")
-    console.log(item.uid)
-
-  
-
+    //console.log("UserService.setItem()")
+    //console.log(item.uid)
 
     await this.db.list('users').update(item.uid, item)
     

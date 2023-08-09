@@ -21,6 +21,7 @@ import { User, Settings, Prefs, Stats } from '../models/user.model';
 export class AuthService {
   userData: any; // Save logged in user data
   user:User;
+  loaded:boolean = false;
 
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
@@ -52,7 +53,7 @@ export class AuthService {
 
         this.user = tUser;
         this.GetUser(tUser);
-        console.log(this.user)
+        //console.log(this.user)
         
       } 
       else{
@@ -62,6 +63,20 @@ export class AuthService {
 
     });
 
+  }
+
+  get userLoaded(): boolean {
+    const user = JSON.parse(localStorage.getItem('user')!);
+    console.log(user)
+    return this.loaded !== false ? true : false;
+    
+  }
+
+  // Returns true when user is looged in and email is verified
+  get isLoggedIn(): boolean {
+    const user = JSON.parse(localStorage.getItem('user')!);
+    return user !== null && user.emailVerified !== false ? true : false;
+    
   }
 
   // Sign in with Google
@@ -94,7 +109,7 @@ export class AuthService {
 
         this.afAuth.authState.subscribe((user) => {
           if (user) {
-            
+            this.router.navigate(['dashboard']);
           }
         });
       })
@@ -138,13 +153,7 @@ export class AuthService {
       .catch((error) => {
         window.alert(error);
       });
-  }
 
-  // Returns true when user is looged in and email is verified
-  get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user')!);
-    return user !== null && user.emailVerified !== false ? true : false;
-    
   }
 
   /* Setting up user data when sign in with username/password, 
@@ -201,7 +210,9 @@ export class AuthService {
 
       }
 
-      this.router.navigate(['dashboard']);
+      this.loaded = true;
+
+      //this.router.navigate(['dashboard']);
 
     })
     
@@ -232,11 +243,10 @@ export class AuthService {
     return this.afAuth.signOut().then(() => {
       localStorage.removeItem('user');
       this.router.navigate(['sign-in']);
+
     });
+
   }
-
-
-  //wemakeg@gmail.com
 
   
 }

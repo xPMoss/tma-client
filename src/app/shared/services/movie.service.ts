@@ -85,10 +85,27 @@ export class MovieService {
     private http:HttpClient, 
     public afAuth: AngularFireAuth 
     ) {
-
     console.log("MovieService()")
-    console.log(authService.user)
+
+    // Load user from localStorage
+    let user = JSON.parse(localStorage.getItem('user')!);
+    this.user = user;
+
+    // Resolve user
+    let obj = new Promise<any>((resolve)=> {
+      this.afAuth.authState.subscribe( (user) => { 
+        resolve(user) 
+        console.log("resolve user");
+        this.user.uid = user.uid;
+        this.user.email = user.email;
+      });
+
+    }).then( (user) => {
+      preload();
+
+    })
     
+
     // ----->>
     let movieList = moviedb;
 
@@ -100,9 +117,8 @@ export class MovieService {
     }
     // <<-----
 
-
-
-    let preload = ()=>{
+    let preload = () => {
+      console.log("Preload")
       for (let i = 0; i < 20; i++) {
         let data = {
 
@@ -133,27 +149,13 @@ export class MovieService {
      
     }
 
-    preload();
-
-    let user = JSON.parse(localStorage.getItem('user')!);
-    this.user = user;
-    
-    this.afAuth.authState.subscribe( (user) => {
-      this.user = user;
-      
-    });
-
-
-    
-    //google-oauth2|116709753550013423577
-    //this.copyData("lists", "2", "UP8kcJmzpNMY4NuR6SbLi6mAtPu2")
-
      // Timer
      this.timer.stop = Date.now();
      this.timer.time = (this.timer.stop-this.timer.start) / 1000;
      console.log(this.timer)
 
   }
+
 
   async copyData(type:any, fromID:any, uid:string){
 
@@ -175,8 +177,6 @@ export class MovieService {
     for (const data of items) {
       this.db.list(type + "_" + uid).update(data.title.toString(), data);
     }
-
-
     
 
   }
@@ -375,6 +375,7 @@ export class MovieService {
         let age:number = 16
         if (this.authService.user) {
           age = this.authService.user.settings.ageRating;
+          
         }
         let show = m.checkRating(age)
         

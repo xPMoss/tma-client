@@ -26,7 +26,10 @@ export class SignInComponent implements OnInit {
 
   async signin(userName, userPassword){
 
-    await this.authService.SignIn(userName.value, userPassword.value)
+    await this.authService.SignIn(userName.value, userPassword.value).then( ()=> {
+      console.log("signed in!!!!")
+
+    })
 
   
     
@@ -35,7 +38,10 @@ export class SignInComponent implements OnInit {
 
   async GoogleAuth(){
 
-    await this.authService.GoogleAuth()
+    await this.authService.GoogleAuth().then( ()=> {
+      console.log("signed in!!!!")
+
+    })
     
   }
 
