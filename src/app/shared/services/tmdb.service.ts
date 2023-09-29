@@ -43,6 +43,24 @@ export class TmdbService {
 
     }
 
+    MovieDetailsTmdb$(id):Observable<any>{
+        if(this.debug)console.log("//-----getMovieDetails$()-----//") // DEBUGGING
+
+        return new Observable( (observer) => {
+
+            this.getDetailsTmdb(id)
+                .then(data => { return data } )
+                .then( data => {
+                    //console.log(data)
+                    observer.next(data);
+                    observer.complete();
+                })
+                // Send data to the observer
+                .catch(err => observer.error(err));
+        })
+
+    }
+
     // GET/:id
     async getDetailsTmdb(id) {
         if(this.debug)console.log("//-----getDetailsTmdb()-----//") // DEBUGGING

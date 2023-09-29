@@ -38,6 +38,8 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.nav(this.page)
 
+    
+
   }
 
   ngAfterViewChecked(){

@@ -13,6 +13,8 @@ export class Settings{
 export class Prefs{
 
     showAs?:string;
+    showMoviesAs?:string;
+    UISide?:string;
 
     vote = {
         min:0,

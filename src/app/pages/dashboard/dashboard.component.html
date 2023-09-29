@@ -113,7 +113,7 @@
         
 
         <!-- Show user data when logged in -->
-        <div class="row" *ngIf="authService.user?.loaded">
+        <div class="row" *ngIf="authService.user?.loaded && authService.user?.prefs">
 
           <!--
           <div class="col-12">
@@ -131,31 +131,48 @@
           </div>
           -->
 
+          <!-- Age rating -->
           <div class="col-12">
 
             <div class="input-group mb-3">
               <span class="input-group-text">Age rating</span>
-              <select class="form-select" title="rating" id="set-age" (change)="setAge($event);">
+              <select class="form-select" title="rating" id="set-age" (change)="setAge($event);" [(ngModel)]="authService.user.settings.ageRating">
+                <!--
                 <option selected value="{{authService.user.settings.ageRating}}">{{authService.user.settings.ageRating}}+</option>
+                -->
                 <option *ngFor="let a of ages" value="{{a}}">{{a}}+</option>
               </select>
             </div>
           </div>
 
 
-          
-          <div class="col-12" *ngIf="authService.user?.prefs">
-            Show as: {{authService.user?.prefs.showAs}}
+          <!-- Show as -->
+          <div class="col-12 mb-2">
+            Show as: 
             <div class="form-check form-switch">
               
-              <label class="form-check-label" for="flexSwitchCheckDefault">Show as: {{authService.user?.prefs.showAs}}</label>
+              <label class="form-check-label" for="flexSwitchCheckDefault">{{authService.user?.prefs.showAs}}</label>
 
               <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked>
+
             </div>
-            
           </div>
 
-        
+          <!-- UI Left/ Right 
+          <div class="col-12 mb-3 form-inline">
+            UI side:
+            <div class="form-check form-switch">
+              <label class="form-check-label" for="flexSwitchCheckDefault">  {{authService.user?.prefs.UISide}}</label>
+              <input class="form-check-input " type="checkbox" id="flexSwitchCheckDefault" checked>
+              
+            </div>
+          </div>
+          -->
+
+
+
+
+          
           
         </div>
 

@@ -24,6 +24,10 @@ export class SearchResultComponent {
   visible:boolean = false;
 
   constructor(private router: Router, public ss:SearchService, public ms:MovieService, public tmdb:TmdbService){
+    
+    router.events.subscribe((val) => {
+      this.clear()
+    });
 
   }
 
@@ -36,10 +40,6 @@ export class SearchResultComponent {
 
 
   clear(){
-    this.value = "";
-    this.movies = undefined;
-
-
     this.ss.movieResults = [];
 
     this.value = "";
@@ -48,7 +48,9 @@ export class SearchResultComponent {
 
     this.visible = false;
 
+
   }
+
 
 
 

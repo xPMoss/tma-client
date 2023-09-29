@@ -78,8 +78,8 @@
                             </div> 
                         </div>
                         -->
-                        <img class="btn img-fluid rounded p-0 m-0" src="https://via.placeholder.com/1280x720?text=LOADING" *ngIf="movie.backdrop_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
-                        <img class="btn img-fluid rounded p-0 m-0" [src]="movie.base_url + 'original' + movie.backdrop_path" *ngIf="!movie.backdrop_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}"/>
+                        <img class="btn img-fluid rounded p-0 m-0" src="https://via.placeholder.com/1280x720?text=LOADING" *ngIf="movie.backdrop_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}" alt=""/>
+                        <img class="btn img-fluid rounded p-0 m-0" [src]="movie.base_url + 'original' + movie.backdrop_path" *ngIf="!movie.backdrop_loading" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}" alt=""/>
     
                     </div>
             
@@ -110,13 +110,13 @@
                 <!--<div class="col-12 rounded m-0 bg-light border ratio" style="--bs-aspect-ratio: 120%;" *ngIf="movie.poster_loading"></div>--> 
                 <div *ngIf="movie.loading">  
                    
-                    <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
+                    <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading" alt=""/>
                     
                 </div>
                 <div *ngIf="!movie.loading">
                    
-                    <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
-                    <img class="img-fluid rounded p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path" *ngIf="!movie.poster_loading"/>
+                    <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading" alt=""/>
+                    <img class="img-fluid rounded p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path" *ngIf="!movie.poster_loading" alt=""/>
                 </div>
                 
     
@@ -136,8 +136,8 @@
         <h4 class="col-12">Trending movies</h4>
         
         <div class="col-6 col-sm-3 btn p-0 m-0" *ngFor="let movie of ms.trendingMovies | slice:0:4;" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}">
-            <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
-            <img class="img-fluid rounded p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path" *ngIf="!movie.poster_loading"/>
+            <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading" alt=""/>
+            <img class="img-fluid rounded p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path" *ngIf="!movie.poster_loading" alt=""/>
 
         </div>
     </div>
@@ -153,8 +153,8 @@
         
 
         <div class="col-4 col-sm-3 col-md-2 col-lg-2 btn p-0 m-0" *ngFor="let movie of ms.topRatedMovies | slice:0:20;" (click)="ms.cMovie = movie" routerLink="/movie/{{movie.id}}">
-            <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading"/>
-            <img class="img-fluid rounded p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path" *ngIf="!movie.poster_loading"/>
+            <img class="img-fluid rounded p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" *ngIf="movie.poster_loading" alt=""/>
+            <img class="img-fluid rounded p-0 m-0" [src]="movie.base_url + 'w400' + movie.poster_path" *ngIf="!movie.poster_loading" alt=""/>
         </div>
     </div>
     

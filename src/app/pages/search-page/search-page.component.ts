@@ -24,10 +24,12 @@ export class SearchPageComponent {
   title = 'search-page-component';
 
     movies:Movie[];
+    pages:number;
+    cPage:Number;
 
     constructor(public ss:SearchService, public ms:MovieService){
         console.log("SearchPageComponent();")
-
+        this.loadMovies();
 
     }
 
@@ -42,9 +44,15 @@ export class SearchPageComponent {
     loadMovies(){
 
         this.ss.results?.subscribe( data => {
+          console.log("loadMovies")
             this.movies = data.results
+            this.pages = data.page
+
             this.movies.forEach(movie => {
+              console.log(movie)
+              let m = new Movie(movie);
               movie.base_url = "https://image.tmdb.org/t/p/";
+
             })
         });
     }

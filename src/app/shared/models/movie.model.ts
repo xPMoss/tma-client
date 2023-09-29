@@ -1,10 +1,55 @@
 
+import { use, delegate } from "typescript-mix";
+
+import { FirebaseMovie } from './firebase.model';
+import { TmdbMovie } from './tmdb.model';
+
 import { catchError, delay } from "rxjs";
 import { UserService } from "../services/user.service";
 import { MovieService } from "../services/movie.service";
 import { TmdbService } from "../services/tmdb.service";
 
 import { HttpClient } from '@angular/common/http';
+
+/*
+const tmdbMovie = (TmdbMovie) => class extends TmdbMovie {};
+
+const firebaseMovie = (FirebaseMovie) => class extends FirebaseMovie {};
+*/
+//export interface NewMovie extends TmdbMovie, FirebaseMovie {}
+
+export class NewMovie{
+    @use( TmdbMovie, FirebaseMovie ) this;
+    base_url:string  = "https://image.tmdb.org/t/p/";  
+
+  
+}
+
+//applyMixins(NewMovie, [TmdbMovie, FirebaseMovie])
+
+
+
+// Mixin function
+function Mixin<T extends new (...args: any[]) => any>(Base: T) {
+    return class extends Base {
+      additionalMethodgreet(): void {
+        console.log("Hi! from the additional method provided by the mixin");
+      }
+    };
+}
+
+function applyMixins(baseClass: any, extendedClasses: any[]) {
+    extendedClasses.forEach(extendedClass => {
+        Object.getOwnPropertyNames(extendedClass.prototype).forEach(name => {
+            Object.defineProperty(
+                baseClass.prototype,
+                name,
+                Object.getOwnPropertyDescriptor(extendedClass.prototype, name) || Object.create(null)
+            )
+        })
+    })
+}
+
 
 
 interface ProductionCompany{
@@ -667,7 +712,10 @@ class Timer{
 
 }
 
+
+
 export class Movie{
+    
 
     // id:s
     id:number;
@@ -826,7 +874,7 @@ export class Movie{
             let backdrops = images.backdrops;
             this.backdrops = [];
 
-            if (backdrops.length > 0) {
+            if (backdrops && backdrops.length > 0) {
                 backdrops.forEach(img => {
                     let newImg:Image = img;
                     this.backdrops.push(newImg)

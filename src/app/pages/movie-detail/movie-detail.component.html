@@ -8,7 +8,7 @@
 </div>
 -->
 
-<div class="container-fluid p-4 mb-4" *ngIf="ms.cMovie as movie">
+<div class="container-fluid mb-4" *ngIf="ms.cMovie as movie">
     
     <!-- Close -->
     <div class="row position-absolute">
@@ -28,8 +28,8 @@
                 <!--<div class="btn btn-danger btn-lg" (click)="location.back()">X</div>-->
             </div>
 
-            <img class="img-fluid rounded" src="https://via.placeholder.com/400x600?text=LOADING" *ngIf="movie.poster_loading"/>
-            <img class="img-fluid rounded" src="{{movie.base_url + 'w400' + movie.poster_path}}" *ngIf="movie.poster_path && !movie.poster_loading"/>
+            <img class="img-fluid rounded" src="https://via.placeholder.com/400x600?text=LOADING" *ngIf="movie.poster_loading" alt="Loading"/>
+            <img class="img-fluid rounded" src="{{movie.base_url + 'w400' + movie.poster_path}}" *ngIf="movie.poster_path && !movie.poster_loading" alt="Movie poster"/>
         </div>
 
         <!-- PARAMS -->
@@ -81,14 +81,14 @@
                 </div>
 
                 <div class="col-auto border-end mb-2" *ngIf="movie.saved == true">
-                    <button class="p-0 px-2 py-1 btn btn-success btn-sm" *ngIf="movie.favorite">Favorite</button>
-                    <button class="p-0 px-2 py-1 btn btn-outline-success btn-sm" *ngIf="!movie.favorite">Favorite</button>
+                    <button class="p-0 px-2 py-1 btn btn-success btn-sm" *ngIf="movie.favorite" (click)="addToFavorite(movie)">Favorite</button>
+                    <button class="p-0 px-2 py-1 btn btn-outline-success btn-sm" *ngIf="!movie.favorite" (click)="addToFavorite(movie)">Favorite</button>
 
                 </div>
 
                 <div class="col-auto mb-2" *ngIf="movie.saved == true">
-                    <button class="p-0 px-2 py-1 btn btn-success btn-sm" *ngIf="movie.favorite">On watchlist</button>
-                    <button class="p-0 px-2 py-1 btn btn-outline-success btn-sm" *ngIf="!movie.favorite">Not on watchlist</button>
+                    <button class="p-0 px-2 py-1 btn btn-success btn-sm" *ngIf="movie.watch" (click)="addToWathList(movie)">On watchlist</button>
+                    <button class="p-0 px-2 py-1 btn btn-outline-success btn-sm" *ngIf="!movie.watch" (click)="addToWathList(movie)">Not on watchlist</button>
 
                 </div>
                 
@@ -217,8 +217,8 @@
     <!-- Backdrops -->
     <div class="row mb-4 pt-4 border-top">
         <div class="col-4 col-sm-2 m-0 p-0 pe-2 pb-2" *ngFor="let img of movie.backdrops | slice:0:6;">
-            <img class="img-fluid rounded btn p-0 m-0" src="https://via.placeholder.com/300x200?text=LOADING" *ngIf="movie.backdrops_loading"/>
-            <img class="img-fluid rounded btn m-0 p-0" src="{{movie.base_url + 'w200' + img.file_path}}" *ngIf="!movie.backdrops_loading"/>
+            <img class="img-fluid rounded btn p-0 m-0" src="https://via.placeholder.com/300x200?text=LOADING" *ngIf="movie.backdrops_loading" alt="Loading"/>
+            <img class="img-fluid rounded btn m-0 p-0" src="{{movie.base_url + 'w200' + img.file_path}}" *ngIf="!movie.backdrops_loading" alt="Movie backdrop"/>
         </div>
 
     </div>
@@ -229,9 +229,9 @@
         <div class="col-4 col-sm-2 m-0 p-0 pe-2" *ngFor="let sm of similarMovies | slice:0:6;" >
             <div class="text-truncate">{{sm.title}}</div>
             
-            <img class="img-fluid rounded btn p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" routerLink="/movie/{{sm.id}}" *ngIf="sm.poster_loading"/>
+            <img class="img-fluid rounded btn p-0 m-0" src="https://via.placeholder.com/200x300?text=LOADING" routerLink="/movie/{{sm.id}}" *ngIf="sm.poster_loading" alt="Loading"/>
 
-            <img class="img-fluid rounded btn m-0 p-0" src="{{sm.base_url + 'w200' + sm.poster_path}}" (click)="similar(sm)"/>
+            <img class="img-fluid rounded btn m-0 p-0" src="{{sm.base_url + 'w200' + sm.poster_path}}" (click)="similar(sm)" alt="Similar movie poster"/>
 
         </div>
 

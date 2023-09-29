@@ -19,6 +19,8 @@ import { List } from "../models/list.model";
 
 import { movies as moviedb } from 'src/assets/db';
 import { TmdbResult } from '../models/tmdb.model';
+import { FirebaseMovie } from '../models/firebase.model';
+
 import { TmdbService } from './tmdb.service';
 import { AuthService } from './auth.service';
 
@@ -95,7 +97,8 @@ export class MovieService {
     let obj = new Promise<any>((resolve)=> {
       this.afAuth.authState.subscribe( (user) => { 
         resolve(user) 
-        console.log("resolve user");
+        if(this.debug)console.log("resolve user"); // DEBUGGING
+
         this.user.uid = user.uid;
         this.user.email = user.email;
       });
@@ -152,7 +155,7 @@ export class MovieService {
      // Timer
      this.timer.stop = Date.now();
      this.timer.time = (this.timer.stop-this.timer.start) / 1000;
-     console.log(this.timer)
+     if(this.debug)console.log(this.timer) // DEBUGGING
 
   }
 
@@ -247,11 +250,20 @@ export class MovieService {
         let nm = new Movie(m);
         
         // Check if is age appropriate
-        let age:number = 16
+        let age:number;
         if (this.authService.user) {
-          age = this.authService.user.settings.ageRating;
+          if(this.authService.user.settings){
+            age = this.authService.user.settings.ageRating;
+          }
+          
+
         }
-        let show = await nm.checkRating(age)
+
+        let show:boolean;
+        if (age) {
+          show = await nm.checkRating(age)
+        }
+
         if ( show ) {
           await nm.init();
           await nm.preload();
@@ -259,6 +271,8 @@ export class MovieService {
           rated++
         }
         
+        if(this.debug)console.log("show: " + show + ", age: " + age) // DEBUGGING
+
         //console.log(type +" - "+ page + " " + _movies.length + "reated: " +rated)
 
 
@@ -282,7 +296,7 @@ export class MovieService {
 
     }
     
-    console.log("Found movies: " + movies.length)
+    if(this.debug) console.log("Found movies: " + movies.length) // DEBUGGING
     
     /*
     while (movies.length < 20) {
@@ -372,17 +386,29 @@ export class MovieService {
       // Load images and misc
       for (const m of this.aMovies) {
         // nm = new movie
-        let age:number = 16
+        // Check if is age appropriate
+        let age:number;
         if (this.authService.user) {
-          age = this.authService.user.settings.ageRating;
+          if(this.authService.user.settings){
+            age = this.authService.user.settings.ageRating;
+          }
           
+
         }
-        let show = m.checkRating(age)
+
+        let show:boolean;
+        if (age) {
+          show = await m.checkRating(age)
+        }
+
         
         if ( show ) {
           m.init();
 
         }
+
+        console.log("show: " + show + ", age: " + age)
+
         
       };
 
@@ -460,7 +486,14 @@ export class MovieService {
   }
 
 
+  // CRUD
   
+  MoviesFirebase$():Observable<any[]>{
+    if(this.debug)console.log("//-----MoviesFirebase$()-----//") // DEBUGGING
+
+    return this.db.list( 'movies_' + this.user.uid, ref => ref.orderByChild('title') ).valueChanges();
+
+  }
 
   //**********************//
   //******** CRUD ********//
@@ -506,6 +539,7 @@ export class MovieService {
   async setItem(item:any) {
     console.log("setItem")
     console.log(item.id)
+    console.log(item)
 
     let movie_user:any;
     movie_user = { id: item.id, saved:true };

@@ -81,7 +81,7 @@ export class MovieDetailComponent {
     ngOnInit(){
         console.log("MovieDetailComponent.ngOnInit()")
 
-       
+        
 
         if (this.ms.page) {
             localStorage.setItem('page', this.ms.page);
@@ -122,26 +122,27 @@ export class MovieDetailComponent {
                 await this.loadMovie(this.ms.cMovie.id);
                 await this.loadLists();
                 
+                await this.checkIfSaved()
+
                 localStorage.setItem('cMovie', this.ms.cMovie.id.toString());
 
+                
             }
 
             await this.getSimilarMovies(this.ms.cMovie.id);
 
+            window.moveTo(250, 250);
+
+            /*
             window.scroll({ 
                 top: 0, 
                 left: 0, 
                 behavior: 'auto'
             });
+            */
         }
 
         check();
-
-        
-
-        
-        
-
         
         
     }
@@ -238,6 +239,56 @@ export class MovieDetailComponent {
   
     }
 
+    addToFavorite(movie){
+        console.log(movie)
+        if (movie.favorite) {
+            movie.favorite = !movie.favorite
+        }
+        else{
+            movie.favorite = true;
+        }
+        
+        let obj = {
+            id:movie.id,
+            saved:movie.saved,
+            title:movie.title,
+            favorite:movie.favorite,
+            watch:movie.watch,
+            seen:movie.seen,
+            vote:movie.vote,
+            lists:movie.lists,
+        }
+
+        console.log(obj)
+
+        this.ms.setItem(obj);
+    }
+
+    addToWathList(movie){
+        console.log(movie)
+        if (movie.watch) {
+            movie.watch = !movie.watch
+        }
+        else{
+            movie.watch = true;
+        }
+        
+        let obj = {
+            id:movie.id,
+            saved:movie.saved,
+            title:movie.title,
+            favorite:movie.favorite,
+            watch:movie.watch,
+            seen:movie.seen,
+            vote:movie.vote,
+            lists:movie.lists,
+        }
+
+        console.log(obj)
+
+        this.ms.setItem(obj);
+    }
+
     saveMovie(movie){
         let obj = {
             id:movie.id,
@@ -320,6 +371,8 @@ export class MovieDetailComponent {
     }
 
     checkIfSaved(){
+        console.log("MovieDetailComponent.checkIfSaved()")
+
         let movie = this.ms.movies.valueChanges().subscribe( (data) => {
             let found = false;
 
@@ -342,7 +395,10 @@ export class MovieDetailComponent {
 
                 const obj = { ...this.ms.cMovie, ...saved_param };
                 this.ms.cMovie = obj;
-              
+                
+            }
+            else{
+                this.ms.cMovie.saved = true;
             }
 
         })

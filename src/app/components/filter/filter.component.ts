@@ -2,6 +2,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 
+// ng Bootstrap
+import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 // rxjs
 import { Observable, throwError, map, Subscription, BehaviorSubject } from 'rxjs';
 import { catchError, retry, switchMap  } from 'rxjs/operators';
@@ -30,6 +33,9 @@ import { Filter, FilterLists } from "../../shared/models/filter.model";
         
         opacity:0.9;
 
+    }
+    .z-100{
+      z-index:100;
     }
     
   `]
@@ -62,7 +68,9 @@ export class FilterComponent {
 
   filterIsAdd:boolean = true;
 
-  constructor(public tmdb:TmdbService, public ms:MovieService){
+  modal:boolean = false;
+
+  constructor(public tmdb:TmdbService, public ms:MovieService, private modalService: NgbModal){
     if(this.debug)console.log("FilterComponent()") // DEBUGGING
     
     
@@ -71,7 +79,16 @@ export class FilterComponent {
 
   }
 
-  
+  open(modal) {
+		this.modalService.open(modal, { ariaLabelledBy: 'modal-new-list' }).result.then(
+			(result) => {
+				
+			},
+			(reason) => {
+				
+			},
+		);
+	}
 
   /********************/
   ngOnInit() {
@@ -174,6 +191,8 @@ export class FilterComponent {
         votes:[],
         runtimes:[],
         providers:[],
+        favorite: false,
+        watch:false,
         min:0,
         max:20,
         ms:this.ms,

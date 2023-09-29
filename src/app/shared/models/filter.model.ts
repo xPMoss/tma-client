@@ -33,6 +33,8 @@ export class Filter{
     votes:any[] = [];
     runtimes:any[] = [];
     providers:any[] = []
+    favorite:boolean = false;
+    watch:boolean = false;
 
     min:number = 0;
     max:number = 10;

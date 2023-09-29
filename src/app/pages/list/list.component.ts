@@ -2,6 +2,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {NgForm, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 
+// ng Bootstrap
+import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 // rxjs
 import { Observable, throwError, map, Subscription, BehaviorSubject } from 'rxjs';
 import { catchError, retry, switchMap  } from 'rxjs/operators';
@@ -16,12 +19,16 @@ import { MsgService } from "../../shared/services/msg.service";
 import { Movie } from "../../shared/models/movie.model";
 import { List } from "../../shared/models/list.model";
 
+
 @Component({
   selector: 'list-component',
-  templateUrl: './list.component.html'
+  templateUrl: './list.component.html',
+
 })
 export class ListComponent {
   title = 'Lists';
+
+	closeResult = '';
 
   @Input() lists:List[];
   aLists:List[];
@@ -34,18 +41,47 @@ export class ListComponent {
 
   listForm:FormGroup;
  
-  newList:boolean = false;
+  content:boolean = false;
  
   constructor(
     public tmdb:TmdbService, 
     public ms:MovieService, 
     public ls:ListService, 
     private fb:FormBuilder, 
-    private msg:MsgService
+    private msg:MsgService,
+    private modalService: NgbModal
     )
   {
     
   }
+
+
+
+  open(content) {
+		this.modalService.open(content, { ariaLabelledBy: 'modal-new-list' }).result.then(
+			(result) => {
+				
+			},
+			(reason) => {
+				
+			},
+		);
+	}
+
+
+  openDeleteListModal(content, list) {
+
+    this.cList = list;
+
+		this.modalService.open(content, { ariaLabelledBy: 'modal-delete-list' }).result.then(
+			(result) => {
+				
+			},
+			(reason) => {
+				
+			},
+		);
+	}
 
   ngOnInit() {
     
@@ -175,17 +211,38 @@ export class ListComponent {
 
     }
 
-    this.newList = false;
+    this.content = false;
+
 
     // Reload movies and lists
     this.init();
 
   }
 
-  deleteList(list){
+  updateList(data){
 
-    this.ls.deleteItem(list);
-    
+    // Create list item
+    let item = {
+      info:data.info,
+      title:data.title,
+
+    }
+
+    if (data.title) {
+      this.ls.setItem(item);
+
+    }
+
+    // Reload movies and lists
+    this.init();
+
+  }
+
+  async deleteList(list){
+
+    await this.ls.deleteItem(list);
+    this.cList = null;
+
     // Reload movies and lists
     this.init();
 

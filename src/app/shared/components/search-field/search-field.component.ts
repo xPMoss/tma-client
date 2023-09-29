@@ -9,7 +9,7 @@ import { MovieService } from "../../services/movie.service";
 import { TmdbService } from "../../services/tmdb.service";
 import { SearchService } from "../../services/search.service";
 import { Movie } from "../../models/movie.model";
-
+import { DiscoverService } from "../../services/discover.service";
 
 @Component({
   selector: 'search-field-component',
@@ -21,7 +21,10 @@ export class SearchFieldComponent {
   value:string;
   movies:Movie[] | undefined;
 
-  constructor(private router: Router, public ss:SearchService, public ms:MovieService, public tmdb:TmdbService){
+  constructor(private router: Router, public ss:SearchService, public ms:MovieService, public tmdb:TmdbService, public ds:DiscoverService){
+    router.events.subscribe((val) => {
+      this.clear()
+    });
 
   }
 
@@ -50,27 +53,36 @@ export class SearchFieldComponent {
   }
 
   async search(){
-    //console.log(this.value)
+    console.log("search")
+    
+    console.log(this.value)
+
     this.movies = [];
 
-    this.tmdb.searchMoviesTmdb(this.value, 1).subscribe( async (data) => {
+    if(this.value != ""){
+      this.tmdb.searchMoviesTmdb(this.value, 1).subscribe( async (data) => {
         this.ss.movies = [];
 
-      data.results.forEach(movie => {
-        let m = new Movie(movie);
-        movie.base_url = "https://image.tmdb.org/t/p/";
-        this.ss.movies.push(movie);
-        this.movies.push(m);
+        data.results.forEach(movie => {
+          let m = new Movie(movie);
+          movie.base_url = "https://image.tmdb.org/t/p/";
+          this.ss.movies.push(movie);
+          this.movies.push(m);
 
-      })
+        })
 
-      this.movies.forEach(movie => {
-        movie.init()
+        this.movies.forEach(movie => {
+          movie.init()
 
-      })
+        })
 
       
-    });
+      });
+    }
+    else{
+      this.clear()
+    }
+   
 
     //this.loadMovies();
 
@@ -82,7 +94,8 @@ export class SearchFieldComponent {
     console.log("Fullsearch")
     console.log(this.value)
 
-    this.ss.movieResults = this.movies;
+
+    this.ss.SearchForMoviesTmdb(this.value);
 
     this.value = "";
     this.movies = [];
@@ -104,16 +117,28 @@ export class SearchFieldComponent {
   }
 
 
+
   checkEvent(event: any){
+    //console.log("checkEvent")
 
     if (event.key=="Enter") {
       console.log("Pressed enter")
       
-      this.router.navigate(['search'])
+      if(this.value != ""){
+        
+       this.fullSearch()
+        
 
-      this.value = "";
-      this.movies = undefined;
-      this.clear()
+      }
+      else{
+        this.value = "";
+        this.movies = undefined;
+        this.clear()
+
+      }
+     
+
+
 
     }
 

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { HomeComponent } from "./pages/home/home.component";
-import { MovieComponent } from "./pages/movie/movie.component";
+import { MovieComponent } from "./pages/movies/movies.component";
 import { MovieDetailComponent } from "./pages/movie-detail/movie-detail.component";
 import { ListComponent } from "./pages/list/list.component";
 import { ProfileComponent } from "./pages/profile/profile.component";
@@ -31,7 +31,7 @@ const routes: Routes = [
   { path:"profile", component: ProfileComponent, data: { title: "Profile" }, canActivate: [AuthGuard] },
   { path:"settings", component: SettingsComponent, data: { title: "Settings" }, canActivate: [AuthGuard] },
   { path:"search", component: SearchPageComponent, pathMatch: 'full', data: { title: "Search" }, canActivate: [AuthGuard] },
-  { path:"discover", component: DiscoverComponent, data: { title: "Discover movies" } },
+  { path:"discover", component: DiscoverComponent, data: { title: "Discover" } },
 
   { path: 'dashboard', component: DashboardComponent, data: { title: "Dashboard" }, canActivate: [AuthGuard] },
 

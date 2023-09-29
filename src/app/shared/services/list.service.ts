@@ -86,9 +86,26 @@ export class ListService {
   /////////
   // PUT //
   async setItem(item:any) {
+    let status:number;
+    let returnedItem = await this.findItem(item.title);
 
-    await this.db.list( 'lists_' + this.user.uid ).update(item.title.toString(), item)
+    //await this.db.list( 'lists_' + this.user.uid ).update(item.title.toString(), item)
     
+    console.log("returnedItem")
+    console.log(returnedItem)
+
+    if (returnedItem.length > 0) {
+      status = 200;
+      this.db.list( 'lists_' + this.user.uid ).update(item.title.toString(), item)
+    }
+    else{
+      console.log("ITEM NOT FOUND!!!")
+      status = 400;
+     
+    }
+
+    return status
+
   }
 
 

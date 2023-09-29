@@ -7,6 +7,20 @@ import {FormControl, Validators, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 // <-- Angular
 
+import { BootstrapIconsModule } from 'ng-bootstrap-icons';
+import { Alarm, App, Bookmark, Trash, X, ArrowBarUp, ArrowUpSquare } from 'ng-bootstrap-icons/icons';
+
+// Select some icons (use an object, not an array)
+const icons = {
+  Alarm,
+  App,
+  Bookmark,
+  Trash,
+  X,
+  ArrowBarUp,
+  ArrowUpSquare
+};
+
 // Angular/routing -->
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -39,7 +53,7 @@ import { HomeComponent } from "./pages/home/home.component";
 import { ProfileComponent } from "./pages/profile/profile.component";
 import { DiscoverComponent } from "./pages/discover/discover.component";
 import { ListComponent } from "./pages/list/list.component";
-import { MovieComponent } from "./pages/movie/movie.component";
+import { MovieComponent } from "./pages/movies/movies.component";
 import { MovieDetailComponent } from "./pages/movie-detail/movie-detail.component";
 
 import { FilterComponent } from "./components/filter/filter.component";
@@ -127,9 +141,11 @@ import { Movie } from "./shared/models/movie.model";
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    BootstrapIconsModule.pick(icons)
+
     
   ],
-  exports: [],
+  exports: [BootstrapIconsModule],
   providers: [AuthService, UserService, TmdbService, MovieService, SearchService, DiscoverService, MsgService,],
   bootstrap: [AppComponent]
 })

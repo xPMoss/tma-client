@@ -195,6 +195,7 @@ export class AuthService {
         
         if (u.email == user.email) {
           console.log("found user")
+          console.log(user)
           user.prefs = u.prefs;
           user.settings = u.settings;
 

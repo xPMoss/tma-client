@@ -1,35 +1,110 @@
 
 
+<ng-template #modal let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-new-list">Filters</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+        <div class="row mb-4 px-3" >
+            <h6 class="col-auto mb-4 px-0"> Choose lists <small>({{ms.aMovies.length}})</small></h6>
+            <div class="col-w100"></div>
+            <div class="col-auto px-0" *ngFor="let list of ms.aLists" (click)="addList(list)">
+                <button type="button" class="btn btn-primary btn-sm me-2 mb-2" disabled *ngIf="list.show && list.title == 'Saved'">
+                    <div *ngIf="list.title == 'Saved'">All</div>
+                    
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-sm me-2 mb-2" *ngIf="!list.show && list.title == 'Saved'">
+                    <div *ngIf="list.title == 'Saved'">All</div>
+                    
+                </button>
+    
+    
+            </div>
+    
+            <div class="col-auto px-0" *ngFor="let list of ms.aLists" (click)="addList(list)">
+                <button type="button" class="btn btn-primary btn-sm me-2 mb-2" *ngIf="list.show && list.title != 'Saved'">
+                    <div *ngIf="list.title == 'Saved'">All</div>
+                    <div *ngIf="list.title != 'Saved'">{{list.title}}</div>
+                  
+                </button>
+    
+                <button type="button" class="btn btn-outline-primary btn-sm me-2 mb-2" *ngIf="!list.show && list.title != 'Saved'">
+                    <div *ngIf="list.title == 'Saved'">All</div>
+                    <div *ngIf="list.title != 'Saved'">{{list.title}}</div>
+                  
+                </button>
+    
+            </div>
 
-<!-- | COLLAPSE | -->
-<div class="container-fluid ms-sm-4" >
+            <div class="col-auto border-start ms-2" >
+                <button type="button" class="btn btn-danger btn-sm" (click)="clearLists()" *ngIf="ms.cLists.length > 0 && ms.cLists[0].title != 'Saved'">
+                    Clear
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled *ngIf="ms.cLists.length == 1 && ms.cLists[0].title == 'Saved'">
+                    Clear
+                </button>
+            </div>
+            
+        </div>
+	</div>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">Cancel</button>
+        <button type="button" class="btn btn-outline-primary" (click)="modal.close('Save click')"> 
+        Ok
+        </button>
+		
+	</div>
+</ng-template>
+
+<div class="position-fixed start-0 top-0 container-fluid m-2 my-4 ">
+    <div class="row my-4">
+
+        <div class="col-w100 py-1 my-1"></div>
+        <div class="col-0 col-md-1 col-lg-2  p-0 m-0"></div>
+        <h6 class="col-auto btn btn-dark" (click)="open(modal)">
+            Filters
+        </h6>
+
+        <div class="col-auto p-0 m-0 my-1 ms-1" >
+            <button type="button" class="p-0 px-2 py-1 btn btn-danger btn-sm mb-2" (click)="clearAll()" *ngIf="ms.cLists.length > 0 && ms.cMovies.length > 0 && ms.cLists[0].title != 'Saved' || ms.cLists.length > 0 && ms.cMovies.length > 0 && cFilters.length > 0">
+                Clear
+            </button>
+            <button type="button" class="p-0 px-2 py-1 btn btn-outline-secondary btn-sm mb-2" disabled *ngIf="ms.cLists.length < 1 && ms.cMovies.length < 1 && cFilters.length < 1">
+                Clear
+            </button>
+        </div>
+        
+        
+    </div>
+</div>
+<!--
+<!- - | COLLAPSE | - ->
+<div class="container-fluid ms-sm-4 z-100" >
     <div class="row">
         <div class="col-auto">
-            <button class="btn btn-dark rounded-0 rounded-top" (click)="isCollapsed = !isCollapsed" *ngIf="isCollapsed">Filters <small>△</small></button>
+            <button class="btn btn-dark rounded-0 rounded-top" (click)="isCollapsed = !isCollapsed" *ngIf="isCollapsed" >Filters <small>△</small></button>
             <button class="btn btn-dark rounded-0 rounded-top" (click)="isCollapsed = !isCollapsed" *ngIf="!isCollapsed">Hide [x]</button>
         </div>
         
     </div>
 </div>
 
-<!-- | MAIN | -->
-<div class="container-fluid px-4 bg-light border rounded" >
-    <!-- | HEADER COLLAPSED | -->
+
+<!- - | MAIN | - ->
+<div class="container-fluid px-4 bg-light border rounded z-100" >
+    <!- - | HEADER COLLAPSED | - ->
     <div class="row ps-2 py-2 pt-3" *ngIf="isCollapsed">
-        <!--
-        <div class="col-auto" >
-            <h4> Filters </h4>
-        </div>
-        -->
+
         
-        <div class="col-auto p-0 m-0" *ngFor="let list of ms.aLists">
+        <div class="col-12 p-0 m-0" *ngFor="let list of ms.aLists">
             <button type="button" disabled class="p-0 px-2 py-1 btn btn-outline-secondary btn-sm mb-2 me-2" *ngIf="list.show"> 
                 <div *ngIf="list.title == 'Saved'">All</div>
                 <div *ngIf="list.title != 'Saved'">{{list.title}}</div> 
             </button>
         </div>
-        
-        <div class="col-auto p-0 me-2" >
+       
+        <div class="col-12 p-0 me-2" >
             <button type="button" class="p-0 px-2 py-1 btn btn-danger btn-sm mb-2" (click)="clearAll()" *ngIf="ms.cLists.length > 0 && ms.cMovies.length > 0 && ms.cLists[0].title != 'Saved' || ms.cLists.length > 0 && ms.cMovies.length > 0 && cFilters.length > 0">
                 Clear all
             </button>
@@ -41,7 +116,7 @@
     </div>
 
     <div class="row ps-2 py-2 pt-3" *ngIf="isCollapsed && cFilters.length > 0">
-        <div class="col-auto p-0 m-0" *ngFor="let f of cFilters">
+        <div class="col-12 p-0 m-0" *ngFor="let f of cFilters">
             <div class="col-auto p-0 m-0" *ngIf="f.filterIsAdd">{{f.type}}s</div>
             <div class="col-auto p-0 m-0" *ngFor="let op of f.options">
                 <button type="button" disabled class="p-0 px-2 py-1 btn btn-outline-secondary btn-sm mb-2 me-2" *ngIf="op.active"> {{op.name}} </button>
@@ -52,7 +127,7 @@
         
     </div>
 
-    <!-- | HEADER !COLLAPSED | -->
+    <!- - | HEADER !COLLAPSED | - ->
     <div class="d-grid d-flex justify-content-between mt-4 pb-4 mb-4 border-bottom" *ngIf="!isCollapsed">
         <div class="col-auto" >
             <h4> Filters </h4>
@@ -69,7 +144,7 @@
         
     </div>
     
-    <!-- | MOVIES | -->
+    <!- - | MOVIES | - ->
     <div class="row mb-4 px-3" [ngbCollapse]="isCollapsed">
         <h6 class="col-auto mb-4 px-0"> Choose movies <small>({{ms.aMovies.length}})</small></h6>
         <div class="col-w100"></div>
@@ -90,13 +165,13 @@
             <button type="button" class="btn btn-primary btn-sm me-2 mb-2" *ngIf="list.show && list.title != 'Saved'">
                 <div *ngIf="list.title == 'Saved'">All</div>
                 <div *ngIf="list.title != 'Saved'">{{list.title}}</div>
-                <!--<small class="text-truncate">{{list.info}}</small>-->
+                <!- -<small class="text-truncate">{{list.info}}</small>- ->
             </button>
 
             <button type="button" class="btn btn-outline-primary btn-sm me-2 mb-2" *ngIf="!list.show && list.title != 'Saved'">
                 <div *ngIf="list.title == 'Saved'">All</div>
                 <div *ngIf="list.title != 'Saved'">{{list.title}}</div>
-                <!--<small class="text-truncate">{{list.info}}</small>-->
+                <!- -<small class="text-truncate">{{list.info}}</small>- ->
             </button>
 
         </div>
@@ -121,7 +196,7 @@
         
     </div>
 
-    <!-- | FILTERS | -->
+    <!- - | FILTERS | - ->
     <div class="row mb-4 px-3" [ngbCollapse]="isCollapsed" *ngFor="let cfl of cFiltersList; let i = index">
         <h6 class="col-auto mb-4 border-end"> Choose filter</h6>
         <div class="col-auto" *ngIf="i>0">
@@ -131,18 +206,18 @@
         </div>
         <div class="col-w100"></div>
         
-        <!--||-->
+        <!- -||- ->
         <div class="col-auto">
 
-            <!--||-->
+            <!- -||- ->
             <div class="row p-0 m-0">
 
-                <!--||-->
+                <!- -||- ->
                 <div class="col-auto p-0 m-0" *ngFor="let f of cfl.filters">
                     <button type="button" class="btn btn-success btn-sm me-2 mb-2" (click)="chooseFilter(cfl, f)" *ngIf="f.active"> {{f.type}} </button>
                     <button type="button" class="btn btn-outline-success btn-sm me-2 mb-2" (click)="chooseFilter(cfl, f)" *ngIf="!f.active"> {{f.type}} </button>
                 </div>
-                <!--||-->
+                <!- -||- ->
 
                 <div class="col-auto border-start m-0 ms-2 ps-3" >
                     <button type="button" class="btn btn-danger btn-sm" (click)="clearFilter(cfl)" *ngIf="cfl.active">
@@ -156,17 +231,17 @@
                 
                 
             </div>
-            <!--||-->
+            <!- -||- ->
 
-            <!--||-->
+            <!- -||- ->
             <div class="row p-0 m-0" *ngIf="cfl.activeFilter">
 
-                <!--||-->
+                <!- -||- ->
                 <div class="row p-0 m-0" *ngIf="cfl.activeFilter.options">   
                     <h6 class="col-auto mb-4"> Choose options <small>({{cfl.activeFilter.options.length}})</small></h6>
                     <div class="col-w100"></div>
 
-                    <!--||-->
+                    <!- -||- ->
                     <div class="col-auto p-0 m-0" *ngIf="filters[0] as allFilter">
                         <button type="button" class="btn btn-success btn-sm me-2 mb-2" disabled> 
                             <div>All</div>
@@ -180,7 +255,7 @@
 
                     </div>
                     <div class="col-auto p-0 m-0" style="overflow: visible;" *ngFor="let opt of cfl.activeFilter.options; count as c; let i = index;">
-                        <!--||-->
+                        <!- -||- ->
                         <button type="button" class="btn btn-success btn-sm me-2 mb-2" (click)="addFilterOption(cfl.activeFilter, opt)" *ngIf="opt.active && i < cfl.activeFilter.max && i > cfl.activeFilter.min"> 
                             <div *ngIf="cfl.activeFilter.type != 'provider'">
                                 {{opt.name}}
@@ -189,9 +264,9 @@
                                 {{opt.provider_name}} 
                             </div>
                         </button>
-                        <!--||-->
+                        <!- -||- ->
 
-                        <!--||-->
+                        <!- -||- ->
                         <button type="button" class="btn btn-outline-success btn-sm me-2 mb-2" (click)="addFilterOption(cfl.activeFilter, opt)" *ngIf="!opt.active && i < cfl.activeFilter.max && i > cfl.activeFilter.min"> 
                             <div *ngIf="cfl.activeFilter.type != 'provider'">
                                 {{opt.name}} 
@@ -201,7 +276,7 @@
                             </div>
                         </button>  
                         
-                        <!--||-->
+                        <!- -||- ->
                     </div>      
                     <div class="col-auto border-start ms-2" *ngIf="cfl.activeFilter.max < cfl.activeFilter.options.length">
                         <button type="button" class="btn btn-dark btn-sm" (click)="navOptions(cfl, '+')">
@@ -210,7 +285,7 @@
 
                     </div>
 
-                    <!--||-->
+                    <!- -||- ->
 
                     <div class="col-auto border-start ms-2" >
                         <button type="button" class="btn btn-danger btn-sm" (click)="clearOptions(cfl)" *ngIf="cfl.activeFilter.active">
@@ -221,7 +296,7 @@
                         </button>
                     </div>
                 </div>
-                <!--||-->
+                <!- -||- ->
 
                 
                 
@@ -234,7 +309,7 @@
             
 
         </div>
-        <!--||-->
+        <!- -||- ->
 
 
 
@@ -242,7 +317,7 @@
 
     </div>
 
-    <!--||-->
+    <!- -||- ->
     <div class="col-auto" *ngIf="cFilters.length > 0">
         <button type="button" class="btn btn-success btn-sm me-2" (click)="addFilter()" *ngIf="filters.length > 0" >
             New filter
@@ -253,10 +328,10 @@
         
         
     </div>
-    <!--||-->
+    <!- -||- ->
 
 </div>
-
+-->
 
 <!--
 <div class="" id="filter" >
