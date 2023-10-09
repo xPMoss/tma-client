@@ -2,8 +2,9 @@
 <div class="container-fluid" >
     <div class="row mb-4">
         <div class="col-12 p-0 m-0 mb-4 text-truncate" *ngFor="let movie of movies">
-            {{ movie['title'] }}
-            <img class="img-fluid rounded btn p-0 m-0" src="{{ movie.base_url + 'w400' + movie['poster_path'] }}" />
+            {{movie.title}}
+         
+            <img class="img-fluid rounded btn p-0 m-0" src="{{ movie.base_url + 'w400' + movie.poster_path }}" />
         </div>
     </div>
 </div>

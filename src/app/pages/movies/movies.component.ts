@@ -4,7 +4,6 @@ import {FormControl, Validators} from '@angular/forms';
 
 // rxjs
 import { Observable, throwError, map, Subscription, BehaviorSubject } from 'rxjs';
-import { catchError, retry, switchMap  } from 'rxjs/operators';
 
 // Services
 import { MovieService } from "../../shared/services/movie.service";
@@ -18,7 +17,6 @@ import { Movie, Country, ReleaseDate, Certification, Genre, Keyword } from "../.
 import { List } from "../../shared/models/list.model";
 import { FirebaseMovie } from '../../shared/models/firebase.model';
 import { TmdbMovie } from 'src/app/shared/models/tmdb.model';
-import { NewMovie } from "../../shared/models/movie.model";
 
 @Component({
   selector: 'movie-component',
@@ -49,7 +47,7 @@ export class MovieComponent {
     showMoviesAs:string = "poster";
     showMoviesAsOptions:string[] = ["poster", "list"];
 
-    movies:NewMovie[] = [];
+    movies:Movie[] = [];
     firebaseMovies:FirebaseMovie[];
 
     constructor(public tmdb:TmdbService, public ms:MovieService, private msg:MsgService, public authService: AuthService, public us:UserService){
@@ -79,49 +77,22 @@ export class MovieComponent {
         
         // Get details
         this.firebaseMovies.forEach( async (movieFb) => {
+          let id = movieFb.id
 
-          let movie:TmdbMovie = await this.tmdb.getDetailsTmdb(movieFb.id);
-          let mv = { ...movieFb, ...movie };
-          let nm = new NewMovie()
+          let movieTmdb:TmdbMovie = await this.tmdb.getDetailsTmdb(id);
+          let images = await this.tmdb.getImagesTmdb(id);
 
-          this.movies.push( { ...nm, ...mv } );
+          // Combine data
+          let movie = { ...movieFb, ...movieTmdb, ...images, ...(new Movie()) };
 
+          this.movies.push( movie );
+          console.log( movie )
 
-          /*
-            let movieTmdb = await this.tmdb.MovieDetailsTmdb$(movieFb.id).subscribe((data)=>{
-              
-              let m = new NewMovie();
-
-              
-
-              console.log("this.movies")
-              console.log({ ...movie, ...m })
-            });
-          */
-          
-
-          
-          
         })
 
-        console.log("this.movies")
-        console.log(this.movies[0])
 
 
       })
-
-      /*
-      this.tmdb.getMovieDetails$(this.movieId).subscribe( async (data:Movie) => {
-  
-        this.movie = { ...this.movie, ...data, };
-  
-      }).add( async()=> {
-        
-        let images = await this.tmdb.getImagesTmdb(this.movie.id);
-        this.movie = { ...this.movie, ...images };
-  
-      });
-      */
   
   
     }

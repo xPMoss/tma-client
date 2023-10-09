@@ -8,15 +8,13 @@ export class TmdbResult{
 
 
     page:number;
-    results:Movie[];
+    results:TmdbMovie[];
     total_pages:number;
     total_results:number;
 
 
 
 }
-
-
 
 export class TmdbMovie{
 

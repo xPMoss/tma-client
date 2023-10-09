@@ -2,9 +2,8 @@
 import { use, delegate } from "typescript-mix";
 
 import { FirebaseMovie } from './firebase.model';
-import { TmdbMovie } from './tmdb.model';
+import { TmdbMovie, TmdbImages, TmdbResult } from './tmdb.model';
 
-import { catchError, delay } from "rxjs";
 import { UserService } from "../services/user.service";
 import { MovieService } from "../services/movie.service";
 import { TmdbService } from "../services/tmdb.service";
@@ -16,15 +15,23 @@ const tmdbMovie = (TmdbMovie) => class extends TmdbMovie {};
 
 const firebaseMovie = (FirebaseMovie) => class extends FirebaseMovie {};
 */
-//export interface NewMovie extends TmdbMovie, FirebaseMovie {}
 
-export class NewMovie{
-    @use( TmdbMovie, FirebaseMovie ) this;
+export interface Movie extends TmdbMovie, TmdbImages, FirebaseMovie {}
+
+export class Movie{
+    @use( TmdbMovie, TmdbImages, FirebaseMovie ) this;
     base_url:string  = "https://image.tmdb.org/t/p/";  
 
   
 }
 
+export interface Result extends TmdbResult, Movie {}
+
+export class Result{
+    @use( TmdbResult, Movie ) this;
+
+  
+}
 //applyMixins(NewMovie, [TmdbMovie, FirebaseMovie])
 
 
@@ -713,7 +720,7 @@ class Timer{
 }
 
 
-
+/*
 export class Movie{
     
 
@@ -1060,4 +1067,4 @@ export class Movie{
         }
     };
 }
-
+*/

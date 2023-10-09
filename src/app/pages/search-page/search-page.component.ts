@@ -11,7 +11,8 @@ import { MovieService } from "../../shared/services/movie.service";
 import { SearchService } from "../../shared/services/search.service";
 
 // Models
-import { Movie } from "../../shared/models/movie.model";
+import { Movie, Result } from "../../shared/models/movie.model";
+import { TmdbImages, TmdbMovie } from 'src/app/shared/models/tmdb.model';
 
 
 
@@ -23,7 +24,7 @@ import { Movie } from "../../shared/models/movie.model";
 export class SearchPageComponent {
   title = 'search-page-component';
 
-    movies:Movie[];
+    result:Result;
     pages:number;
     cPage:Number;
 
@@ -45,13 +46,15 @@ export class SearchPageComponent {
 
         this.ss.results?.subscribe( data => {
           console.log("loadMovies")
-            this.movies = data.results
-            this.pages = data.page
-
-            this.movies.forEach(movie => {
+          
+            this.result = { ...data, ...(new Result()) };
+           
+            this.result.results.forEach(movie => {
               console.log(movie)
-              let m = new Movie(movie);
-              movie.base_url = "https://image.tmdb.org/t/p/";
+
+              let m = new Movie();
+
+            
 
             })
         });

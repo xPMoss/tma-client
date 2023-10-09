@@ -9,7 +9,7 @@ export class FirebaseMovie{
     id:number;
     saved:boolean;
     seen:boolean;
-    title:String;
+    title:string;
     vote:number;
 
 }
